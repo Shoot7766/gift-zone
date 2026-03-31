@@ -3,7 +3,7 @@ import { Link, usePathname, useRouter } from "@/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 import {
@@ -16,6 +16,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const { data: session } = useSession();
   const itemCount = useCartStore((s) => s.items.reduce((t, i) => t + i.quantity, 0));
   const { items: wishlistItems, setItems: setWishlistItems } = useWishlistStore();
@@ -26,6 +27,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [unreadCount, setUnreadCount] = useState(0);
   const [announcement, setAnnouncement] = useState<{ title: string; message: string } | null>(null);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 12);
@@ -52,6 +54,17 @@ export default function Navbar() {
   }, [session, setWishlistItems]);
 
   useEffect(() => { setMobileOpen(false); setUserMenuOpen(false); }, [pathname]);
+
+  useEffect(() => {
+    const onMouseDown = (e: MouseEvent) => {
+      if (!userMenuOpen) return;
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onMouseDown);
+    return () => document.removeEventListener("mousedown", onMouseDown);
+  }, [userMenuOpen]);
   
   useEffect(() => {
     fetch("/api/admin/broadcast")
@@ -77,13 +90,13 @@ export default function Navbar() {
   const userMenuItems = session
     ? session.user?.role === "admin"
       ? [
-          { href: profileHref, label: "Profil", icon: <CircleUser size={16} /> },
+          { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: "/admin", label: t("adminPanel") || "Boshqaruv paneli", icon: <Shield size={16} /> },
           { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
         ]
       : session.user?.role === "provider"
       ? [
-          { href: profileHref, label: "Profil", icon: <CircleUser size={16} /> },
+          { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: "/provider", label: t("dashboard"), icon: <LayoutDashboard size={16} /> },
           { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
           { href: "/provider/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
@@ -91,7 +104,7 @@ export default function Navbar() {
           { href: "/provider/dokon", label: t("myShop") || "Do'konim", icon: <Store size={16} /> },
         ]
       : [
-          { href: profileHref, label: "Profil", icon: <CircleUser size={16} /> },
+          { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: dashHref, label: "Buyurtmalarim", icon: <LayoutDashboard size={16} /> },
           { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
           { href: "/dashboard/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
@@ -162,9 +175,7 @@ export default function Navbar() {
             />
             <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
               <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "var(--dark)" }}>Gift Zone</span>
-              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "var(--gray-500)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                Zarafshon
-              </span>
+              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "var(--gray-500)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Gift Marketplace</span>
             </span>
           </Link>
 
@@ -181,17 +192,19 @@ export default function Navbar() {
             ))}
           </div>
 
+          {!pathname.includes("/katalog") && (
           <form onSubmit={handleSearch} className="desktop-only" style={{ flex: 1, maxWidth: "300px", margin: "0 2rem", position: "relative" }}>
              <Search size={16} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", color: "var(--gray-400)" }} />
              <input 
                 type="text" 
-                placeholder="Sovg'a izlash..." 
+                placeholder={tCommon("search")} 
                 className="form-input" 
                 style={{ width: "100%", paddingLeft: "2.5rem", borderRadius: "100px", background: "var(--gray-50)", border: "1px solid var(--gray-200)", fontSize: "0.85rem", height: "38px" }}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
              />
           </form>
+          )}
 
           {/* Right side */}
           <div className="navbar-right">
@@ -217,7 +230,7 @@ export default function Navbar() {
 
             {/* User menu / auth */}
             {session ? (
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative" }} ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   style={{
@@ -257,7 +270,6 @@ export default function Navbar() {
 
                 {userMenuOpen && (
                   <>
-                    <div onClick={() => setUserMenuOpen(false)} style={{ position: "fixed", inset: 0, zIndex: 98 }} />
                     <div style={{
                       position: "absolute", top: "calc(100% + 8px)", right: 0,
                       background: "var(--card-bg)", borderRadius: "var(--r-lg)", padding: "0.5rem",

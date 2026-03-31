@@ -58,26 +58,30 @@ function RegisterForm() {
 
     setLoading(true);
     setError("");
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: `${form.firstName.trim()} ${form.lastName.trim()}`,
-        email: form.email,
-        phone: form.phone,
-        password: form.password,
-        role: form.role,
-      })
-    });
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+          role: form.role,
+        })
+      });
 
-    const data = await res.json();
-    setLoading(false);
-
-    if (res.ok) {
-      toast(t("registerSuccess") || "Muvaffaqiyatli ro'yxatdan o'tdingiz!", "success");
-      router.push(`/kirish?redirect=${redirect}`);
-    } else {
-      setError(data.error || "Xatolik ro'y berdi");
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        toast(t("registerSuccess") || "Muvaffaqiyatli ro'yxatdan o'tdingiz!", "success");
+        router.push(`/kirish?redirect=${redirect}`);
+      } else {
+        setError(data.error || "Xatolik ro'y berdi");
+      }
+    } catch {
+      setError("Tarmoq xatosi. Qayta urinib ko'ring");
+    } finally {
+      setLoading(false);
     }
   };
 

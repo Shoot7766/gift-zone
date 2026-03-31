@@ -3,14 +3,17 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/navigation";
 import { ProductCard } from "@/components/home/FeaturedProducts";
-import { Search, X, SearchX } from "lucide-react";
+import { X, SearchX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EmojiEmpty } from "@/components/Loader";
-import { LAUNCH_CITY_LABEL } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface Subcategory { id: number; name: string; icon?: string; slug: string; category_id: number; }
 interface Category { id: number; name: string; icon: string; slug: string; subcategories?: Subcategory[]; }
 function CatalogContent() {
+  const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -94,25 +97,8 @@ function CatalogContent() {
             transition={{ delay: 0.1 }}
             style={{ color: "white", marginBottom: "1.5rem", fontWeight: "900", letterSpacing: "-0.02em" }}
           >
-            {`Katalog / ${LAUNCH_CITY_LABEL}`}
+            {tNav("catalog")}
           </motion.h1>
-          {/* Search */}
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            style={{ maxWidth: "600px", position: "relative" }}
-          >
-            <Search size={20} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", color: "var(--gray-400)" }} />
-            <input
-              type="text"
-              placeholder="Sovg'a qidirish..."
-              className="form-input"
-              style={{ paddingLeft: "3rem", paddingRight: "1rem", fontSize: "1rem" }}
-              value={searchKeyword}
-              onChange={e => setSearchKeyword(e.target.value)}
-            />
-          </motion.div>
         </div>
       </motion.div>
 
@@ -137,7 +123,7 @@ function CatalogContent() {
             </div>
 
             <div style={{ marginBottom: "1rem", padding: "0.85rem 1rem", borderRadius: "12px", background: "var(--teal-pale)", color: "var(--teal-dark)", fontSize: "0.85rem", fontWeight: "700", lineHeight: 1.45 }}>
-              Tanlangan do'kon va mahsulotlar <strong>{LAUNCH_CITY_LABEL}</strong> bo'yicha ko'rsatilmoqda.
+              {tCommon("found", { count: products.length })}
             </div>
 
             {/* Category */}
