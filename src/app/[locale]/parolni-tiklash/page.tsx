@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Link, useParams } from "@/navigation";
+import { useParams } from "next/navigation";
+import { Link } from "@/navigation";
 
 export default function ForgotPasswordPage() {
   const params = useParams();
