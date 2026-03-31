@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     }
 
     const existing = db.$client
-      .prepare("SELECT id FROM users WHERE email = ?")
+      .prepare("SELECT id FROM users WHERE lower(email) = lower(?)")
       .get(normalizedEmail);
 
     if (existing) {
@@ -67,6 +67,9 @@ export async function POST(req: NextRequest) {
     return apiSuccess({ message: "Ro'yxatdan o'tish muvaffaqiyatli!" });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Xatolik yuz berdi";
+    if (message.includes("UNIQUE constraint failed: users.email")) {
+      return apiError("Bu email allaqachon ro'yxatdan o'tgan", 400, "EMAIL_EXISTS");
+    }
     console.error("Register error:", e);
     return apiError(message, 500, "REGISTER_ERROR");
   }

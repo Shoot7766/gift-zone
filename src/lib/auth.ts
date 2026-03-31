@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         try {
           const user = db.$client
-            .prepare("SELECT * FROM users WHERE email = ?")
+            .prepare("SELECT * FROM users WHERE lower(email) = lower(?)")
             .get(email) as {
               id: string;
               name: string;
