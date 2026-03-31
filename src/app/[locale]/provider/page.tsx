@@ -169,7 +169,7 @@ export default function ProviderDashboard() {
         }}
       >
         <Link href="/provider/mahsulotlar/yangi" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Yangi mahsulot
+          Mahsulot qo'shish
         </Link>
         <Link href="/provider/buyurtmalar" className="btn btn-ghost" style={{ justifyContent: "center" }}>
           Buyurtmalar
@@ -178,7 +178,7 @@ export default function ProviderDashboard() {
           Promo va shablonlar
         </Link>
         <Link href="/provider/dokon" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Do'kon sozlamalari
+          Mening do'konim
         </Link>
       </div>
 

@@ -56,20 +56,16 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const {
-      name, description, phone, telegram, cityId, address, workingHours, logo, deliveryFee,
-      pickupAvailable, shopDeliveryAvailable, deliveryAreaCityIds, defaultPreparationTime, pickupInstructions,
+      name, description, phone, telegram, address, workingHours, logo, deliveryFee,
+      pickupAvailable, shopDeliveryAvailable, defaultPreparationTime, pickupInstructions, locationLat, locationLng,
     } = body;
 
     if (!name) return apiError("Do'kon nomi kerak", 400, "VALIDATION_ERROR");
 
     const pickupFlag = pickupAvailable === false ? 0 : 1;
     const shopDelFlag = shopDeliveryAvailable === false ? 0 : 1;
-    const areaIds =
-      typeof deliveryAreaCityIds === "string"
-        ? deliveryAreaCityIds.trim()
-        : Array.isArray(deliveryAreaCityIds)
-          ? deliveryAreaCityIds.filter(Boolean).join(",")
-          : null;
+    const normalizedLat = Number.isFinite(Number(locationLat)) ? Number(locationLat) : null;
+    const normalizedLng = Number.isFinite(Number(locationLng)) ? Number(locationLng) : null;
 
     // Check if shop already exists
     const existing = db.$client.prepare("SELECT id FROM shops WHERE user_id = ?").get(session.user.id) as { id: string } | undefined;
@@ -77,12 +73,14 @@ export async function POST(req: NextRequest) {
       // Update instead
       db.$client.prepare(`
         UPDATE shops SET name=?, description=?, phone=?, telegram=?, city_id=?, address=?, working_hours=?, logo=?, delivery_fee=?,
-          pickup_available=?, shop_delivery_available=?, delivery_area_city_ids=?, default_preparation_time=?, pickup_instructions=?
+          pickup_available=?, shop_delivery_available=?, delivery_area_city_ids=?, default_preparation_time=?, pickup_instructions=?,
+          location_lat=?, location_lng=?
         WHERE user_id=?
       `).run(name, description || null, phone || null, telegram || null,
-             cityId || null, address || null, workingHours || null, logo || null,
-             deliveryFee || 20000, pickupFlag, shopDelFlag, areaIds || null,
+             null, address || null, workingHours || null, logo || null,
+             deliveryFee || 20000, pickupFlag, shopDelFlag, null,
              defaultPreparationTime || null, pickupInstructions || null,
+             normalizedLat, normalizedLng,
              session.user.id);
       return apiSuccess({ shopId: existing.id, updated: true });
     }
@@ -90,12 +88,12 @@ export async function POST(req: NextRequest) {
     const id = generateId();
     db.$client.prepare(`
       INSERT INTO shops (id, user_id, name, description, phone, telegram, city_id, address, working_hours, logo, delivery_fee,
-        pickup_available, shop_delivery_available, delivery_area_city_ids, default_preparation_time, pickup_instructions)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        pickup_available, shop_delivery_available, delivery_area_city_ids, default_preparation_time, pickup_instructions, location_lat, location_lng)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).run(id, session.user.id, name, description || null, phone || null,
-           telegram || null, cityId || null, address || null, workingHours || null, logo || null,
-           deliveryFee || 20000, pickupFlag, shopDelFlag, areaIds || null,
-           defaultPreparationTime || null, pickupInstructions || null);
+           telegram || null, null, address || null, workingHours || null, logo || null,
+           deliveryFee || 20000, pickupFlag, shopDelFlag, null,
+           defaultPreparationTime || null, pickupInstructions || null, normalizedLat, normalizedLng);
 
     return apiSuccess({ shopId: id, created: true });
   } catch (e) {

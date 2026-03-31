@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
       images,
     } = body;
 
-    if (!shopId || !title || !price) {
+    if (!shopId || !title || !price || !categoryId) {
       return apiError("Majburiy maydonlar to'ldirilmagan", 400, "VALIDATION_ERROR");
     }
 

@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
 import { randomUUID, createHash, randomBytes } from "node:crypto";
-import { db, initDb } from "@/db";
+import { initDb } from "@/db";
 import { apiSuccess } from "@/lib/apiResponse";
 import { getSiteUrl } from "@/lib/site";
 import { sendMail } from "@/lib/mailer";
+import { userStore } from "@/lib/userStore";
 
 try {
   initDb();
@@ -22,9 +23,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const user = db.$client
-      .prepare("SELECT id, email, name FROM users WHERE lower(email)=lower(?) LIMIT 1")
-      .get(normalizedEmail) as { id: string; email: string; name: string } | undefined;
+    const user = await userStore.findUserByEmail(normalizedEmail);
 
     if (!user) {
       return apiSuccess({
@@ -36,11 +35,12 @@ export async function POST(req: NextRequest) {
     const tokenHash = createHash("sha256").update(rawToken).digest("hex");
     const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
-    db.$client
-      .prepare(
-        "INSERT INTO password_resets (id, user_id, token_hash, expires_at, used) VALUES (?, ?, ?, ?, 0)"
-      )
-      .run(randomUUID(), user.id, tokenHash, expiresAt);
+    await userStore.createPasswordReset({
+      id: randomUUID(),
+      userId: user.id,
+      tokenHash,
+      expiresAt,
+    });
 
     const resetUrl = new URL(
       `/${targetLocale}/parolni-tiklash/${rawToken}`,

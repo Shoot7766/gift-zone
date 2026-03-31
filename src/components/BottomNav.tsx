@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Link, usePathname } from "@/navigation";
-import { Home, Compass, ShoppingBag, User } from "lucide-react";
+import { Home, ShoppingBag, User } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 
@@ -38,7 +38,6 @@ export default function BottomNav() {
 
   const navItems = [
     { label: t("home") || "Bosh", icon: <Home size={22} />, href: "/" },
-    { label: t("catalog") || "Katalog", icon: <Compass size={22} />, href: "/katalog" },
     { label: t("cart") || "Savat", icon: <ShoppingBag size={22} />, href: "/savat" },
     { label: t("profile") || "Profil", icon: <User size={22} />, href: session ? "/dashboard/profil" : "/kirish" },
   ];

@@ -1,17 +1,18 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter, usePathname, Link } from "@/navigation";
-import { Package, Gift, BarChart2, Store, Plus, MessageSquare, Ticket } from "lucide-react";
+import { Package, Gift, BarChart2, Store, Plus, MessageSquare, Ticket, CircleUser } from "lucide-react";
 import { GlobalLoader } from "@/components/Loader";
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function ProviderLayout({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const tNav = useTranslations("nav");
-  const tProduct = useTranslations("product");
+  const locale = useLocale();
+  const isRu = locale === "ru";
   const [shop, setShop] = useState<{ id: string; name: string } | null>(null);
 
   useEffect(() => {
@@ -37,11 +38,13 @@ export default function ProviderLayout({ children }: { children: React.ReactNode
 
   const navLinks = [
     { href: "/provider", label: tNav("dashboard"), icon: <BarChart2 size={18} />, exact: true },
-    { href: "/provider/mahsulotlar", label: tNav("catalog"), icon: <Gift size={18} /> },
+    { href: "/provider/profil", label: tNav("profile"), icon: <CircleUser size={18} /> },
+    { href: "/provider/mahsulotlar/yangi", label: isRu ? "Добавить товар" : "Mahsulot qo'shish", icon: <Plus size={18} /> },
+    { href: "/provider/mahsulotlar", label: isRu ? "Товары" : "Mahsulotlar", icon: <Gift size={18} /> },
     { href: "/provider/buyurtmalar", label: tNav("orders"), icon: <Package size={18} /> },
-    { href: "/provider/chat", label: "Suhbatlar", icon: <MessageSquare size={18} /> },
-    { href: "/provider/promo", label: "Promo va shablonlar", icon: <Ticket size={18} /> },
-    { href: "/provider/dokon", label: tNav("myShop") || "Do'kon profili", icon: <Store size={18} /> },
+    { href: "/provider/chat", label: isRu ? "Чаты" : "Suhbatlar", icon: <MessageSquare size={18} /> },
+    { href: "/provider/promo", label: isRu ? "Промо и шаблоны" : "Promo va shablonlar", icon: <Ticket size={18} /> },
+    { href: "/provider/dokon", label: isRu ? "Мой магазин" : "Mening do'konim", icon: <Store size={18} /> },
   ];
 
   return (
@@ -55,12 +58,9 @@ export default function ProviderLayout({ children }: { children: React.ReactNode
             </div>
             <div>
               <div style={{ fontWeight: "700", fontSize: "0.9rem" }}>{shop?.name || session?.user?.name}</div>
-              <div style={{ fontSize: "0.75rem", color: "var(--gray-400)" }}>{tNav("myShop") || "Provider"}</div>
+              <div style={{ fontSize: "0.75rem", color: "var(--gray-400)" }}>{tNav("myShop") || (isRu ? "Продавец" : "Provider")}</div>
             </div>
           </div>
-          <Link href="/provider/mahsulotlar/yangi" className="btn btn-primary btn-sm" style={{ width: "100%", borderRadius: "8px" }}>
-            <Plus size={14} /> {tProduct("addProduct")}
-          </Link>
         </div>
 
         <nav style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>

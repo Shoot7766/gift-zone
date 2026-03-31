@@ -57,6 +57,8 @@ export function initDb() {
       delivery_fee REAL DEFAULT 20000,
       balance REAL DEFAULT 0,
       pending_balance REAL DEFAULT 0,
+      location_lat REAL,
+      location_lng REAL,
       created_at TEXT DEFAULT (datetime('now'))
     );
 
@@ -335,6 +337,12 @@ export function initDb() {
     sqlite.exec(
       "ALTER TABLE shops ADD COLUMN delivery_fee REAL DEFAULT 20000;"
     );
+  }
+  if (!shopCols.some((c) => c.name === "location_lat")) {
+    sqlite.exec("ALTER TABLE shops ADD COLUMN location_lat REAL;");
+  }
+  if (!shopCols.some((c) => c.name === "location_lng")) {
+    sqlite.exec("ALTER TABLE shops ADD COLUMN location_lng REAL;");
   }
 
   const userCols = sqlite.prepare("PRAGMA table_info(users)").all() as Array<{ name: string }>;

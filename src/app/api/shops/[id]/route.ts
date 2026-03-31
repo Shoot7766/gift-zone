@@ -61,27 +61,25 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const body = await req.json();
     const {
-      name, description, phone, telegram, cityId, address, workingHours, logo, deliveryFee,
-      pickupAvailable, shopDeliveryAvailable, deliveryAreaCityIds, defaultPreparationTime, pickupInstructions,
+      name, description, phone, telegram, address, workingHours, logo, deliveryFee,
+      pickupAvailable, shopDeliveryAvailable, defaultPreparationTime, pickupInstructions, locationLat, locationLng,
     } = body;
 
     const pickupFlag = pickupAvailable === false ? 0 : 1;
     const shopDelFlag = shopDeliveryAvailable === false ? 0 : 1;
-    const areaIds =
-      typeof deliveryAreaCityIds === "string"
-        ? deliveryAreaCityIds.trim()
-        : Array.isArray(deliveryAreaCityIds)
-          ? deliveryAreaCityIds.filter(Boolean).join(",")
-          : null;
+    const normalizedLat = Number.isFinite(Number(locationLat)) ? Number(locationLat) : null;
+    const normalizedLng = Number.isFinite(Number(locationLng)) ? Number(locationLng) : null;
 
     db.$client.prepare(`
       UPDATE shops SET name=?, description=?, phone=?, telegram=?, city_id=?, address=?, working_hours=?, logo=?, delivery_fee=?,
-        pickup_available=?, shop_delivery_available=?, delivery_area_city_ids=?, default_preparation_time=?, pickup_instructions=?
+        pickup_available=?, shop_delivery_available=?, delivery_area_city_ids=?, default_preparation_time=?, pickup_instructions=?,
+        location_lat=?, location_lng=?
       WHERE id=? AND user_id=?
     `).run(name, description || null, phone || null, telegram || null,
-           cityId || null, address || null, workingHours || null, logo || null,
-           deliveryFee || 20000, pickupFlag, shopDelFlag, areaIds || null,
+           null, address || null, workingHours || null, logo || null,
+           deliveryFee || 20000, pickupFlag, shopDelFlag, null,
            defaultPreparationTime || null, pickupInstructions || null,
+           normalizedLat, normalizedLng,
            id, session.user.id);
 
     return apiSuccess({});

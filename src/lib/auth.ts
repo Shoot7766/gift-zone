@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { db, initDb } from "@/db";
+import { initDb } from "@/db";
+import { userStore } from "@/lib/userStore";
 
 // Initialize DB tables on startup
 try { initDb(); } catch (e) { console.log("DB init:", e); }
@@ -27,17 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const password = String(credentials.password);
 
         try {
-          const user = db.$client
-            .prepare("SELECT * FROM users WHERE lower(email) = lower(?)")
-            .get(email) as {
-              id: string;
-              name: string;
-              email: string;
-              password: string;
-              role: string;
-              phone: string | null;
-              avatar: string | null;
-            } | undefined;
+          const user = await userStore.findUserByEmail(email);
 
           if (!user) return null;
 

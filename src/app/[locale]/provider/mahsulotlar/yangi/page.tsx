@@ -11,7 +11,6 @@ export default function NewProductPage() {
   const router = useRouter();
   const [shopId, setShopId] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
-  const [cities, setCities] = useState<any[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -24,7 +23,6 @@ export default function NewProductPage() {
     preparationTime: "",
     categoryId: "",
     subcategoryId: "",
-    cityId: "",
   });
 
   useEffect(() => {
@@ -35,7 +33,6 @@ export default function NewProductPage() {
     });
     fetch("/api/categories").then(r => r.json()).then(d => {
       setCategories(d.categories || []);
-      setCities(d.cities || []);
     });
   }, [session]);
 
@@ -69,6 +66,7 @@ export default function NewProductPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!shopId) { alert("Avval do'kon yarating"); return; }
+    if (!form.categoryId) { alert("Kategoriyani tanlang (masalan: gul, o'yinchoq)"); return; }
     setSaving(true);
 
     const res = await fetch("/api/products", {
@@ -84,7 +82,6 @@ export default function NewProductPage() {
         preparationTime: form.preparationTime,
         categoryId: form.categoryId ? parseInt(form.categoryId) : null,
         subcategoryId: form.subcategoryId ? parseInt(form.subcategoryId) : null,
-        cityId: form.cityId ? parseInt(form.cityId) : null,
         images,
       }),
     });
@@ -163,10 +160,10 @@ export default function NewProductPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div className="form-group">
-                <label className="form-label">Kategoriya</label>
+                <label className="form-label">Kategoriya *</label>
                 <select className="form-input form-select"
-                  value={form.categoryId} onChange={e => setForm(p => ({ ...p, categoryId: e.target.value, subcategoryId: "" }))}>
-                  <option value="">Tanlang</option>
+                  value={form.categoryId} onChange={e => setForm(p => ({ ...p, categoryId: e.target.value, subcategoryId: "" }))} required>
+                  <option value="">Kategoriyani tanlang (gul, o'yinchoq...)</option>
                   {categories.map(c => <option key={c.id} value={c.id}>{c.icon} {c.name}</option>)}
                 </select>
               </div>
@@ -181,16 +178,6 @@ export default function NewProductPage() {
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-              <div className="form-group">
-                <label className="form-label">Shahar</label>
-                <select className="form-input form-select"
-                  value={form.cityId} onChange={e => setForm(p => ({ ...p, cityId: e.target.value }))}>
-                  <option value="">Tanlang</option>
-                  {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-            </div>
           </div>
 
           {/* Images */}

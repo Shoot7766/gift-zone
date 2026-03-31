@@ -12,21 +12,17 @@ export default function ProviderShopPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
-  const [cities, setCities] = useState<{ id: number; name: string }[]>([]);
   const [shopId, setShopId] = useState<string | null>(null);
   const [form, setForm] = useState({
-    name: "", description: "", phone: "", telegram: "", cityId: "", address: "",
+    name: "", description: "", phone: "", telegram: "", address: "",
     workingHours: "", logo: "", deliveryFee: "20000",
     pickupAvailable: true,
     shopDeliveryAvailable: true,
-    deliveryAreaCityIds: [] as string[],
     defaultPreparationTime: "",
     pickupInstructions: "",
+    locationLat: "",
+    locationLng: "",
   });
-
-  useEffect(() => {
-    fetch("/api/categories").then(r => r.json()).then(d => setCities(d.cities || []));
-  }, []);
 
   useEffect(() => {
     if (!session?.user?.id) return;
@@ -34,24 +30,21 @@ export default function ProviderShopPage() {
       const myShop = d.shops?.find((s: any) => s.user_id === session!.user.id);
       if (myShop) {
         setShopId(myShop.id);
-        const area = myShop.delivery_area_city_ids
-          ? String(myShop.delivery_area_city_ids).split(",").map((x: string) => x.trim()).filter(Boolean)
-          : [];
         setForm({
           name: myShop.name || "",
           description: myShop.description || "",
           phone: myShop.phone || "",
           telegram: myShop.telegram || "",
-          cityId: myShop.city_id?.toString() || "",
           address: myShop.address || "",
           workingHours: myShop.working_hours || "",
           logo: myShop.logo || "",
           deliveryFee: myShop.delivery_fee?.toString() || "20000",
           pickupAvailable: myShop.pickup_available !== 0,
           shopDeliveryAvailable: myShop.shop_delivery_available !== 0,
-          deliveryAreaCityIds: area,
           defaultPreparationTime: myShop.default_preparation_time || "",
           pickupInstructions: myShop.pickup_instructions || "",
+          locationLat: myShop.location_lat != null ? String(myShop.location_lat) : "",
+          locationLng: myShop.location_lng != null ? String(myShop.location_lng) : "",
         });
       }
       setLoading(false);
@@ -102,16 +95,16 @@ export default function ProviderShopPage() {
         description: form.description,
         phone: form.phone,
         telegram: form.telegram,
-        cityId: form.cityId ? parseInt(form.cityId) : null,
         address: form.address || null,
         workingHours: form.workingHours,
         logo: form.logo,
         deliveryFee: parseInt(form.deliveryFee) || 20000,
         pickupAvailable: form.pickupAvailable,
         shopDeliveryAvailable: form.shopDeliveryAvailable,
-        deliveryAreaCityIds: form.deliveryAreaCityIds.length ? form.deliveryAreaCityIds.join(",") : "",
         defaultPreparationTime: form.defaultPreparationTime || null,
         pickupInstructions: form.pickupInstructions || null,
+        locationLat: form.locationLat ? parseFloat(form.locationLat) : null,
+        locationLng: form.locationLng ? parseFloat(form.locationLng) : null,
       }),
     });
 
@@ -167,14 +160,6 @@ export default function ProviderShopPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
               <div className="form-group">
-                <label className="form-label">Shahar</label>
-                <select className="form-input form-select"
-                  value={form.cityId} onChange={e => setForm(p => ({ ...p, cityId: e.target.value }))}>
-                  <option value="">Shaherni tanlang</option>
-                  {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-              <div className="form-group">
                 <label className="form-label">Ish vaqti</label>
                 <input type="text" className="form-input" placeholder="09:00 – 22:00"
                   value={form.workingHours} onChange={e => setForm(p => ({ ...p, workingHours: e.target.value }))} />
@@ -186,6 +171,42 @@ export default function ProviderShopPage() {
               <input type="text" className="form-input" placeholder="Toshkent, Chilonzor 12-uy"
                 value={form.address} onChange={e => setForm(p => ({ ...p, address: e.target.value }))} />
             </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div className="form-group">
+                <label className="form-label">Lokatsiya (Latitude)</label>
+                <input
+                  type="number"
+                  step="any"
+                  className="form-input"
+                  placeholder="40.12345"
+                  value={form.locationLat}
+                  onChange={(e) => setForm((p) => ({ ...p, locationLat: e.target.value }))}
+                />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Lokatsiya (Longitude)</label>
+                <input
+                  type="number"
+                  step="any"
+                  className="form-input"
+                  placeholder="65.12345"
+                  value={form.locationLng}
+                  onChange={(e) => setForm((p) => ({ ...p, locationLng: e.target.value }))}
+                />
+              </div>
+            </div>
+            {form.locationLat && form.locationLng && (
+              <div className="form-group">
+                <label className="form-label">Xaritada ko&apos;rish</label>
+                <iframe
+                  title="shop-map"
+                  src={`https://www.google.com/maps?q=${encodeURIComponent(`${form.locationLat},${form.locationLng}`)}&z=15&output=embed`}
+                  style={{ width: "100%", height: "260px", border: "1px solid var(--gray-200)", borderRadius: "12px" }}
+                  loading="lazy"
+                />
+              </div>
+            )}
 
             <div className="form-group">
               <label className="form-label">Yetkazib berish narxi (so&apos;m)</label>
@@ -217,24 +238,6 @@ export default function ProviderShopPage() {
                 style={{ minHeight: "72px" }} />
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Yetkazib berish hududi (shaharlar)</label>
-              <p style={{ fontSize: "0.82rem", color: "var(--gray-500)", marginBottom: "0.5rem" }}>Bo&apos;sh qoldiring — barcha shaharlar. Tanlansa — faqat shu shaharlarga yetkaziladi. Bir nechtasini tanlash: Ctrl/Cmd bosib turib.</p>
-              <select
-                className="form-input"
-                multiple
-                value={form.deliveryAreaCityIds}
-                onChange={(e) => {
-                  const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
-                  setForm((p) => ({ ...p, deliveryAreaCityIds: selected }));
-                }}
-                style={{ minHeight: "120px" }}
-              >
-                {cities.map((c) => (
-                  <option key={c.id} value={String(c.id)}>{c.name}</option>
-                ))}
-              </select>
-            </div>
           </div>
 
           {/* Logo & Save */}

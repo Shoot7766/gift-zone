@@ -1,9 +1,10 @@
 import { NextRequest } from "next/server";
-import { db, initDb } from "@/db";
+import { initDb } from "@/db";
 import bcrypt from "bcryptjs";
 import { generateId } from "@/lib/utils";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { apiError, apiSuccess } from "@/lib/apiResponse";
+import { userStore } from "@/lib/userStore";
 
 try { initDb(); } catch {}
 
@@ -42,9 +43,7 @@ export async function POST(req: NextRequest) {
       return apiError("Parol kuchli bo'lishi shart (8+, katta/kichik harf, raqam, maxsus belgi)", 400, "VALIDATION_ERROR");
     }
 
-    const existing = db.$client
-      .prepare("SELECT id FROM users WHERE lower(email) = lower(?)")
-      .get(normalizedEmail);
+    const existing = await userStore.findUserByEmail(normalizedEmail);
 
     if (existing) {
       return apiError("Bu email allaqachon ro'yxatdan o'tgan", 400, "EMAIL_EXISTS");
@@ -53,21 +52,23 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(passwordValue, 10);
     const id = generateId();
 
-    db.$client
-      .prepare("INSERT INTO users (id, name, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)")
-      .run(
-        id,
-        normalizedName,
-        normalizedEmail,
-        hashedPassword,
-        normalizedPhone || null,
-        role === "provider" ? "provider" : "customer"
-      );
+    await userStore.createUser({
+      id,
+      name: normalizedName,
+      email: normalizedEmail,
+      password: hashedPassword,
+      phone: normalizedPhone || null,
+      role: role === "provider" ? "provider" : "customer",
+    });
 
     return apiSuccess({ message: "Ro'yxatdan o'tish muvaffaqiyatli!" });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Xatolik yuz berdi";
-    if (message.includes("UNIQUE constraint failed: users.email")) {
+    if (
+      message.includes("UNIQUE constraint failed: users.email") ||
+      message.includes("UNIQUE constraint failed") ||
+      message.toLowerCase().includes("unique")
+    ) {
       return apiError("Bu email allaqachon ro'yxatdan o'tgan", 400, "EMAIL_EXISTS");
     }
     console.error("Register error:", e);

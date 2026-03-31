@@ -5,6 +5,7 @@ import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import LanguageSwitcher from "./LanguageSwitcher";
 import {
   ShoppingCart, ChevronDown,
@@ -17,6 +18,8 @@ export default function Navbar() {
   const router = useRouter();
   const t = useTranslations("nav");
   const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const isRu = locale === "ru";
   const { data: session } = useSession();
   const itemCount = useCartStore((s) => s.items.reduce((t, i) => t + i.quantity, 0));
   const { items: wishlistItems, setItems: setWishlistItems } = useWishlistStore();
@@ -79,38 +82,39 @@ export default function Navbar() {
   const dashHref = session?.user?.role === "admin" ? "/admin"
     : session?.user?.role === "provider" ? "/provider" : "/dashboard/buyurtmalar";
   const profileHref =
-    session?.user?.role === "customer" ? "/dashboard/profil" : dashHref;
+    session?.user?.role === "customer"
+      ? "/dashboard/profil"
+      : session?.user?.role === "provider"
+      ? "/provider/profil"
+      : dashHref;
   const isCustomerRole = !session?.user?.role || session.user.role === "customer";
 
-  const navLinks = [
-    { href: "/katalog", label: t("catalog") },
-    { href: "/dokonlar", label: t("shops") },
-  ];
+  const navLinks = [{ href: "/dokonlar", label: t("shops") }];
 
   const userMenuItems = session
     ? session.user?.role === "admin"
       ? [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
-          { href: "/admin", label: t("adminPanel") || "Boshqaruv paneli", icon: <Shield size={16} /> },
-          { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
+          { href: "/admin", label: t("adminPanel") || (isRu ? "Панель управления" : "Boshqaruv paneli"), icon: <Shield size={16} /> },
+          { href: "/provider", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
         ]
       : session.user?.role === "provider"
       ? [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: "/provider", label: t("dashboard"), icon: <LayoutDashboard size={16} /> },
-          { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
+          { href: "/provider", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
           { href: "/provider/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
-          { href: "/provider/chat", label: "Xabarlar", icon: <MessageCircle size={16} /> },
-          { href: "/provider/dokon", label: t("myShop") || "Do'konim", icon: <Store size={16} /> },
+          { href: "/provider/chat", label: isRu ? "Сообщения" : "Xabarlar", icon: <MessageCircle size={16} /> },
+          { href: "/provider/dokon", label: t("myShop") || (isRu ? "Мой магазин" : "Do'konim"), icon: <Store size={16} /> },
         ]
       : [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
-          { href: dashHref, label: "Buyurtmalarim", icon: <LayoutDashboard size={16} /> },
-          { href: "/hamyon", label: "Hamyon", icon: <ShoppingCart size={16} /> },
+          { href: dashHref, label: isRu ? "Мои заказы" : "Buyurtmalarim", icon: <LayoutDashboard size={16} /> },
+          { href: "/hamyon", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
           { href: "/dashboard/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
           {
             href: "/dashboard/chat",
-            label: "Xabarlar",
+            label: isRu ? "Сообщения" : "Xabarlar",
             icon: (
               <div style={{ position: "relative" }}>
                 <MessageCircle size={16} />
@@ -175,7 +179,6 @@ export default function Navbar() {
             />
             <span style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
               <span style={{ fontWeight: 900, fontSize: "1.1rem", color: "var(--dark)" }}>Gift Zone</span>
-              <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "var(--gray-500)", letterSpacing: "0.08em", textTransform: "uppercase" }}>Gift Marketplace</span>
             </span>
           </Link>
 
