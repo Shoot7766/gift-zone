@@ -46,7 +46,7 @@ export default function Footer() {
             <p style={{ fontSize: "0.9rem", lineHeight: "1.7", marginBottom: "1.5rem", maxWidth: "320px" }}>{t("desc")}</p>
             <div style={{ display: "flex", gap: "0.625rem" }}>
               {[
-                { icon: <Send size={16} />, href: "https://t.me/sovgauz", label: "Telegram" },
+                { icon: <Send size={16} />, href: "https://t.me/giftzone_vercel_app", label: "Telegram" },
                 { icon: <ExternalLink size={16} />, href: "https://instagram.com/sovgauz", label: "Instagram" },
               ].map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"

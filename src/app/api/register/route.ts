@@ -23,25 +23,46 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, email, password, phone, role } = await req.json();
+    const normalizedName = typeof name === "string" ? name.trim() : "";
+    const normalizedEmail = typeof email === "string" ? email.trim().toLowerCase() : "";
+    const normalizedPhone = typeof phone === "string" ? phone.trim() : "";
+    const passwordValue = typeof password === "string" ? password : "";
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-    if (!name || !email || !password) {
+    if (!normalizedName || !normalizedEmail || !passwordValue) {
       return apiError("Barcha maydonlar to'ldirilishi shart", 400, "VALIDATION_ERROR");
+    }
+    if (normalizedName.split(/\s+/).length < 2) {
+      return apiError("Ism va familyani alohida kiriting", 400, "VALIDATION_ERROR");
+    }
+    if (!/^\+998\d{9}$/.test(normalizedPhone)) {
+      return apiError("Telefon +998 bilan va 9 ta raqam formatida bo'lishi shart", 400, "VALIDATION_ERROR");
+    }
+    if (!strongPassword.test(passwordValue)) {
+      return apiError("Parol kuchli bo'lishi shart (8+, katta/kichik harf, raqam, maxsus belgi)", 400, "VALIDATION_ERROR");
     }
 
     const existing = db.$client
       .prepare("SELECT id FROM users WHERE email = ?")
-      .get(email);
+      .get(normalizedEmail);
 
     if (existing) {
       return apiError("Bu email allaqachon ro'yxatdan o'tgan", 400, "EMAIL_EXISTS");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(passwordValue, 10);
     const id = generateId();
 
     db.$client
       .prepare("INSERT INTO users (id, name, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)")
-      .run(id, name, email, hashedPassword, phone || null, role === "provider" ? "provider" : "customer");
+      .run(
+        id,
+        normalizedName,
+        normalizedEmail,
+        hashedPassword,
+        normalizedPhone || null,
+        role === "provider" ? "provider" : "customer"
+      );
 
     return apiSuccess({ message: "Ro'yxatdan o'tish muvaffaqiyatli!" });
   } catch (e) {

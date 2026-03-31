@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 const LOGO_PATH =
-  "C:\\Users\\User\\.cursor\\projects\\c-Users-User-sovg-a-sovga-app\\assets\\c__Users_User_AppData_Roaming_Cursor_User_workspaceStorage_d0373be01a45d615fa47e5f617add427_images_ChatGPT_Image_31____._2026__.__12_13_22-add0aeea-b476-46c1-b7bd-4c0b18ab2757.png";
+  "C:\\Users\\User\\.cursor\\projects\\c-Users-User-sovg-a-sovga-app\\assets\\c__Users_User_AppData_Roaming_Cursor_User_workspaceStorage_d0373be01a45d615fa47e5f617add427_images_ChatGPT_Image_31____._2026__.__12_13_22-127f6373-964a-4d77-81d0-0728752e8cd8.png";
 
 export async function GET() {
   try {

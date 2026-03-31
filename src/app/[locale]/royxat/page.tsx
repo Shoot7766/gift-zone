@@ -22,21 +22,52 @@ function RegisterForm() {
     }
   }, [status, redirect, router]);
 
-  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", role: "customer" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "+998",
+    password: "",
+    role: "customer",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
+  const isStrongPassword = (password: string) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password);
+  };
+
+  const normalizeUzPhone = (raw: string) => {
+    const digits = raw.replace(/\D/g, "");
+    const withoutCountry = digits.startsWith("998") ? digits.slice(3) : digits;
+    return `+998${withoutCountry.slice(0, 9)}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.password.length < 6) return setError(t("passwordError") || "Parol kamida 6 ta belgi");
+    if (!form.firstName.trim() || !form.lastName.trim()) {
+      return setError("Ism va familya alohida to'ldirilishi shart");
+    }
+    if (!/^\+998\d{9}$/.test(form.phone)) {
+      return setError("Telefon raqam +998 bilan va 9 ta raqamda bo'lishi shart");
+    }
+    if (!isStrongPassword(form.password)) {
+      return setError("Parol: kamida 8 belgi, 1 katta harf, 1 kichik harf, 1 raqam va 1 maxsus belgi bo'lishi shart");
+    }
 
     setLoading(true);
     setError("");
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form)
+      body: JSON.stringify({
+        name: `${form.firstName.trim()} ${form.lastName.trim()}`,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+        role: form.role,
+      })
     });
 
     const data = await res.json();
@@ -149,16 +180,44 @@ function RegisterForm() {
               </button>
             </div>
 
-            <div className="form-group" style={{ marginBottom: "1rem" }}>
-              <label className="form-label" style={{ fontWeight: "600" }}>{t("name")}</label>
-              <input type="text" className="form-input" placeholder="Ali Valiyev"
-                value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} required style={{ padding: "0.875rem 1rem" }} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontWeight: "600" }}>Ism</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Ali"
+                  value={form.firstName}
+                  onChange={e => setForm(p => ({ ...p, firstName: e.target.value }))}
+                  required
+                  style={{ padding: "0.875rem 1rem" }}
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 0 }}>
+                <label className="form-label" style={{ fontWeight: "600" }}>Familya</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Valiyev"
+                  value={form.lastName}
+                  onChange={e => setForm(p => ({ ...p, lastName: e.target.value }))}
+                  required
+                  style={{ padding: "0.875rem 1rem" }}
+                />
+              </div>
             </div>
 
             <div className="form-group" style={{ marginBottom: "1rem" }}>
               <label className="form-label" style={{ fontWeight: "600" }}>{t("phone")}</label>
-              <input type="tel" className="form-input" placeholder="+998"
-                value={form.phone} onChange={e => setForm(p => ({ ...p, phone: e.target.value }))} required style={{ padding: "0.875rem 1rem" }} />
+              <input
+                type="tel"
+                className="form-input"
+                placeholder="+998901234567"
+                value={form.phone}
+                onChange={e => setForm(p => ({ ...p, phone: normalizeUzPhone(e.target.value) }))}
+                required
+                style={{ padding: "0.875rem 1rem" }}
+              />
             </div>
 
             <div className="form-group" style={{ marginBottom: "1rem" }}>
@@ -171,13 +230,16 @@ function RegisterForm() {
               <label className="form-label" style={{ fontWeight: "600" }}>{t("password")}</label>
               <div style={{ position: "relative" }}>
                 <input type={showPass ? "text" : "password"} className="form-input" placeholder="••••••••"
-                  value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} minLength={6}
+                  value={form.password} onChange={e => setForm(p => ({ ...p, password: e.target.value }))} minLength={8}
                   style={{ padding: "0.875rem 3rem 0.875rem 1rem" }} required />
                 <button type="button" onClick={() => setShowPass(!showPass)}
                   style={{ position: "absolute", right: "1rem", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--gray-400)" }}>
                   {showPass ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+            </div>
+            <div style={{ color: "var(--gray-500)", fontSize: "0.78rem", lineHeight: 1.5 }}>
+              Parol kamida 8 ta belgi bo'lsin: 1 ta katta harf, 1 ta kichik harf, 1 ta raqam va 1 ta maxsus belgi.
             </div>
 
             {error && (
