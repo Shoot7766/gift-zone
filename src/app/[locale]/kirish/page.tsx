@@ -157,7 +157,7 @@ function LoginForm() {
             <div className="form-group" style={{ marginBottom: "0.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                 <label className="form-label" style={{ marginBottom: 0, fontWeight: "600" }}>{t("password")}</label>
-                <Link href="/yordam?q=parol" style={{ fontSize: "0.85rem", color: "var(--teal)", fontWeight: "600", textDecoration: "none" }}>{t("forgotPassword")}</Link>
+                <Link href="/parolni-tiklash" style={{ fontSize: "0.85rem", color: "var(--teal)", fontWeight: "600", textDecoration: "none" }}>{t("forgotPassword")}</Link>
               </div>
               <div style={{ position: "relative" }}>
                 <input type={showPass ? "text" : "password"} className="form-input" placeholder="••••••••"

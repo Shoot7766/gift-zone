@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 
 export default function ShopsPage() {
   const t = useTranslations("home");
+  const tNav = useTranslations("nav");
   const tCommon = useTranslations("common");
   const [shops, setShops] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export default function ShopsPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "3rem", flexWrap: "wrap", gap: "2rem" }}>
           <div>
             <div className="section-eyebrow">{t("shopsTitle") || "Brandlar"}</div>
-            <h1 className="section-title" style={{ marginBottom: 0 }}>Eng Yaxshi <span className="highlight">Do&apos;konlar</span></h1>
+            <h1 className="section-title" style={{ marginBottom: 0 }}>{t("shopsTitle")}</h1>
           </div>
           <div style={{ position: "relative", width: "100%", maxWidth: "360px" }}>
             <Search size={18} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", color: "var(--gray-400)" }} />
@@ -64,14 +65,14 @@ export default function ShopsPage() {
                        <div>
                          <h3 style={{ fontWeight: "800", fontSize: "1.25rem", color: "var(--dark)", marginBottom: "0.25rem" }}>{shop.name}</h3>
                          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.9rem", color: "var(--gray-500)" }}>
-                           <Star size={14} fill="#FCD34D" color="#FCD34D" /> {shop.rating || "5.0"} • {shop._count?.products || 0} ta mahsulot
+                          <Star size={14} fill="#FCD34D" color="#FCD34D" /> {shop.rating || "5.0"} • {tCommon("found", { count: shop._count?.products || 0 })}
                          </div>
                        </div>
                     </div>
                     {shop.description && <p style={{ fontSize: "0.95rem", color: "var(--gray-600)", lineHeight: "1.6", marginBottom: "1.5rem" }}>{shop.description}</p>}
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "1rem", borderTop: "1px solid var(--gray-50)" }}>
                        <span style={{ fontSize: "0.875rem", color: "var(--gray-400)", display: "flex", alignItems: "center", gap: "0.25rem" }}><MapPin size={14} /> Uzbekistan</span>
-                       <span className="btn btn-ghost btn-sm" style={{ color: "var(--teal)", fontWeight: "700" }}>Kirish <ChevronRight size={16} /></span>
+                       <span className="btn btn-ghost btn-sm" style={{ color: "var(--teal)", fontWeight: "700" }}>{tNav("login")} <ChevronRight size={16} /></span>
                     </div>
                   </motion.div>
                 </Link>
