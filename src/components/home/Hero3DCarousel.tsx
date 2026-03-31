@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 
 type Slide = {
   id: string;
@@ -9,38 +10,47 @@ type Slide = {
   text: string;
 };
 
-const SLIDES: Slide[] = [
-  {
-    id: "s1",
-    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1400&fit=crop",
-    title: "Har hafta yangilanadigan tanlangan sovg'alar",
-    text: "Logo uslubiga mos ko'k-pushti aksentlar, premium banner va zamonaviy savdo maydoni ko'rinishi.",
-  },
-  {
-    id: "s2",
-    image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=1400&fit=crop",
-    title: "Romantik lahzalar uchun estetik tanlovlar",
-    text: "Atirgul buketlari, gul qutilari va syurpriz to'plamlar bilan maxsus kunni unutilmas qiling.",
-  },
-  {
-    id: "s3",
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1400&fit=crop",
-    title: "Yorqin LED va neon kolleksiya",
-    text: "Neon yozuvlar, foto lampalar va dekor sovg'alar bilan sovg'angizga zamonaviy uslub qo'shing.",
-  },
+const SLIDE_IMAGES = [
+  "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=1400&fit=crop",
+  "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?q=80&w=1400&fit=crop",
+  "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1400&fit=crop",
 ];
 
 export default function Hero3DCarousel() {
+  const t = useTranslations("home.banner");
   const [activeIndex, setActiveIndex] = useState(0);
+  const slides: Slide[] = useMemo(
+    () => [
+      {
+        id: "s1",
+        image: SLIDE_IMAGES[0],
+        title: t("slide1Title"),
+        text: t("slide1Text"),
+      },
+      {
+        id: "s2",
+        image: SLIDE_IMAGES[1],
+        title: t("slide2Title"),
+        text: t("slide2Text"),
+      },
+      {
+        id: "s3",
+        image: SLIDE_IMAGES[2],
+        title: t("slide3Title"),
+        text: t("slide3Text"),
+      },
+    ],
+    [t]
+  );
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % SLIDES.length);
+      setActiveIndex((prev) => (prev + 1) % slides.length);
     }, 3800);
     return () => window.clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
-  const activeSlide = useMemo(() => SLIDES[activeIndex], [activeIndex]);
+  const activeSlide = useMemo(() => slides[activeIndex], [activeIndex, slides]);
 
   return (
     <div
@@ -65,8 +75,8 @@ export default function Hero3DCarousel() {
       />
 
       <div className="hero-3d-stage">
-        {SLIDES.map((slide, index) => {
-          const diff = (index - activeIndex + SLIDES.length) % SLIDES.length;
+        {slides.map((slide, index) => {
+          const diff = (index - activeIndex + slides.length) % slides.length;
           const position = diff === 0 ? 0 : diff === 1 ? 1 : -1;
 
           return (
@@ -121,7 +131,7 @@ export default function Hero3DCarousel() {
           {activeSlide.text}
         </div>
         <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.7rem" }}>
-          {SLIDES.map((slide, i) => (
+          {slides.map((slide, i) => (
             <button
               key={slide.id}
               type="button"

@@ -1,6 +1,6 @@
 "use client";
 import { Link } from "@/navigation";
-import { Phone, Mail, Send, ExternalLink } from "lucide-react";
+import { Phone, Send, ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function Footer() {
@@ -43,9 +43,7 @@ export default function Footer() {
                 Gift <span>Zone</span>
               </div>
             </Link>
-            <p style={{ fontSize: "0.9rem", lineHeight: "1.7", marginBottom: "1.5rem", maxWidth: "320px" }}>
-              Zamonaviy sovg'a qutilari, gullar va syurpriz sovg'alar uchun yorqin platforma.
-            </p>
+            <p style={{ fontSize: "0.9rem", lineHeight: "1.7", marginBottom: "1.5rem", maxWidth: "320px" }}>{t("desc")}</p>
             <div style={{ display: "flex", gap: "0.625rem" }}>
               {[
                 { icon: <Send size={16} />, href: "https://t.me/sovgauz", label: "Telegram" },
@@ -90,7 +88,6 @@ export default function Footer() {
             <div className="footer-title">{t("contact")}</div>
             {[
               { icon: <Phone size={14} />, label: "+998933100764" },
-              { icon: <Mail size={14} />, label: "info@giftzone.uz" },
             ].map((c) => (
               <div key={c.label} style={{ display: "flex", alignItems: "center", gap: "0.625rem", marginBottom: "0.75rem", color: "rgba(255,255,255,0.6)", fontSize: "0.875rem" }}>
                 <span style={{ color: "var(--gold-light)", flexShrink: 0 }}>{c.icon}</span>
@@ -100,7 +97,7 @@ export default function Footer() {
             <div style={{ marginTop: "1.25rem" }}>
               <div className="footer-title" style={{ marginBottom: "0.75rem", fontSize: "0.82rem" }}>{t("payment")}</div>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                {["Karta (P2P)", "Naqd pul"].map((p) => (
+                {[t("paymentCard"), t("paymentCash")].map((p) => (
                   <span key={p} style={{
                     padding: "3px 10px", border: "1px solid rgba(255,255,255,0.15)",
                     borderRadius: "6px", fontSize: "0.78rem", fontWeight: "700",

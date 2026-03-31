@@ -21,6 +21,26 @@
     "heroTitle": "The Most Beautiful Gifts for Your Loved Ones",
     "heroTitleRich": "The Most Beautiful<r></r>Gifts for Your<r></r><accent>Loved Ones</accent>",
     "badge": "Uzbekistan's #1 Gift Platform",
+    "banner": {
+      "badge": "Gift Zone premium gift space",
+      "titleMain": "Choosing gifts",
+      "titleAccent": "made more elegant",
+      "description": "Find flower boxes, premium gift sets, sweets, cakes, and romantic gifts in one modern marketplace.",
+      "chip1": "Premium gift boxes",
+      "chip2": "Flowers and surprises",
+      "chip3": "Curated in brand colors",
+      "ctaCatalog": "Go to catalog",
+      "ctaShops": "View shops",
+      "statShops": "Test shops",
+      "statProducts": "Demo products",
+      "statRating": "Average rating",
+      "slide1Title": "Hand-picked gifts refreshed every week",
+      "slide1Text": "Premium banner with blue-pink accents aligned to the brand style and a modern storefront look.",
+      "slide2Title": "Aesthetic picks for romantic moments",
+      "slide2Text": "Make special days unforgettable with rose bouquets, flower boxes, and surprise sets.",
+      "slide3Title": "Bright LED and neon collection",
+      "slide3Text": "Add a modern touch with neon signs, photo lamps, and decorative gift items."
+    },
     "heroSubtitle": "The best gift shops in Uzbekistan in one place. Thousands of gifts on one platform.",
     "marketingDesc": "Welcome to the largest gift platform in Uzbekistan.",
     "stats": {
@@ -176,7 +196,9 @@
     "payment": "Payment Systems",
     "delivery": "Delivery Info",
     "returns": "Return Policy",
-    "security": "Security"
+    "security": "Security",
+    "paymentCard": "Card (P2P)",
+    "paymentCash": "Cash"
   },
   "custom": {
     "title": "Custom Gift",

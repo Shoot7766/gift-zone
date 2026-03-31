@@ -1,13 +1,15 @@
 "use client";
 import { ShieldCheck, Truck, Gem, HeartPulse } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 export default function TrustBand() {
+  const t = useTranslations("home");
   const items = [
-    { icon: <ShieldCheck size={22} color="var(--teal)" />, bg: "var(--teal-pale)", label: "Xavfsiz to'lov", sub: "Karta · Naqd pul" },
-    { icon: <Truck size={22} color="var(--blue)" />, bg: "var(--blue-pale)", label: "Tez yetkazish", sub: "O'z vaqtida" },
-    { icon: <Gem size={22} color="var(--gold-dark)" />, bg: "var(--gold-pale)", label: "Premium sifat", sub: "Kafolatlangan xizmat" },
-    { icon: <HeartPulse size={22} color="var(--purple)" />, bg: "var(--purple-pale)", label: "Hissiyotlar", sub: "Har qanday hodisa uchun" },
+    { icon: <ShieldCheck size={22} color="var(--teal)" />, bg: "var(--teal-pale)", label: t("trust4"), sub: t("trust4Desc") },
+    { icon: <Truck size={22} color="var(--blue)" />, bg: "var(--blue-pale)", label: t("trust3"), sub: t("trust3Desc") },
+    { icon: <Gem size={22} color="var(--gold-dark)" />, bg: "var(--gold-pale)", label: t("featuredTitle"), sub: t("featuredEyebrow") },
+    { icon: <HeartPulse size={22} color="var(--purple)" />, bg: "var(--purple-pale)", label: t("howTitle"), sub: t("step4") },
   ];
 
   return (

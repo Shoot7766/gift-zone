@@ -1,3 +1,5 @@
+"use client";
+
 import TrustBand from "@/components/home/TrustBadges";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
@@ -8,8 +10,11 @@ import SmartRecommender from "@/components/home/SmartRecommender";
 import Hero3DCarousel from "@/components/home/Hero3DCarousel";
 import { Link } from "@/navigation";
 import { ArrowRight, Store } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function HomePage() {
+  const t = useTranslations("home");
+
   return (
     <main>
       <section
@@ -56,7 +61,7 @@ export default function HomePage() {
                   marginBottom: "1rem",
                 }}
               >
-                Gift Zone premium sovg&apos;alar maydoni
+                {t("banner.badge")}
               </div>
               <h1
                 style={{
@@ -68,7 +73,7 @@ export default function HomePage() {
                   marginBottom: "1rem",
                 }}
               >
-                Sovg&apos;a tanlashni{" "}
+                {t("banner.titleMain")}{" "}
                 <span
                   style={{
                     background: "linear-gradient(135deg, #DB6DFF, #64DAFF)",
@@ -76,7 +81,7 @@ export default function HomePage() {
                     color: "transparent",
                   }}
                 >
-                  yanada chiroyli
+                  {t("banner.titleAccent")}
                 </span>
               </h1>
               <p
@@ -88,11 +93,10 @@ export default function HomePage() {
                   marginBottom: "1.4rem",
                 }}
               >
-                Gul qutilari, premium sovg&apos;a to&apos;plamlari, shirinliklar, tortlar va romantik sovg&apos;alarni
-                zamonaviy uslubda bir joydan toping.
+                {t("banner.description")}
               </p>
               <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-                {["Premium sovg'a qutilari", "Gullar va syurprizlar", "Logo ranglariga mos tanlov"].map((chip) => (
+                {[t("banner.chip1"), t("banner.chip2"), t("banner.chip3")].map((chip) => (
                   <span
                     key={chip}
                     style={{
@@ -111,7 +115,7 @@ export default function HomePage() {
               </div>
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 <Link href="/katalog" className="btn btn-primary btn-lg">
-                  Katalogga o&apos;tish <ArrowRight size={18} />
+                  {t("banner.ctaCatalog")} <ArrowRight size={18} />
                 </Link>
                 <Link
                   href="/dokonlar"
@@ -123,7 +127,7 @@ export default function HomePage() {
                     backdropFilter: "blur(12px)",
                   }}
                 >
-                  <Store size={18} color="#7FE7FF" /> Do&apos;konlarni ko&apos;rish
+                  <Store size={18} color="#7FE7FF" /> {t("banner.ctaShops")}
                 </Link>
               </div>
               <div
@@ -136,9 +140,9 @@ export default function HomePage() {
                 }}
               >
                 {[
-                  { value: "4+", label: "Test do'konlar" },
-                  { value: "8+", label: "Demo mahsulotlar" },
-                  { value: "4.8", label: "O'rtacha reyting" },
+                  { value: "4+", label: t("banner.statShops") },
+                  { value: "8+", label: t("banner.statProducts") },
+                  { value: "4.8", label: t("banner.statRating") },
                 ].map((stat) => (
                   <div
                     key={stat.label}

@@ -21,6 +21,26 @@
     "heroTitle": "Sevganlaringizga Eng Chiroyli Sovg'alar",
     "heroTitleRich": "Sevganlaringizga<r></r>Eng Chiroyli<r></r><accent>Sovg'alar</accent>",
     "badge": "O'zbekiston №1 sovg'a platformasi",
+    "banner": {
+      "badge": "Gift Zone premium sovg'alar maydoni",
+      "titleMain": "Sovg'a tanlashni",
+      "titleAccent": "yanada chiroyli",
+      "description": "Gul qutilari, premium sovg'a to'plamlari, shirinliklar, tortlar va romantik sovg'alarni zamonaviy uslubda bir joydan toping.",
+      "chip1": "Premium sovg'a qutilari",
+      "chip2": "Gullar va syurprizlar",
+      "chip3": "Logo ranglariga mos tanlov",
+      "ctaCatalog": "Katalogga o'tish",
+      "ctaShops": "Do'konlarni ko'rish",
+      "statShops": "Test do'konlar",
+      "statProducts": "Demo mahsulotlar",
+      "statRating": "O'rtacha reyting",
+      "slide1Title": "Har hafta yangilanadigan tanlangan sovg'alar",
+      "slide1Text": "Logo uslubiga mos ko'k-pushti aksentlar, premium banner va zamonaviy savdo maydoni ko'rinishi.",
+      "slide2Title": "Romantik lahzalar uchun estetik tanlovlar",
+      "slide2Text": "Atirgul buketlari, gul qutilari va syurpriz to'plamlar bilan maxsus kunni unutilmas qiling.",
+      "slide3Title": "Yorqin LED va neon kolleksiya",
+      "slide3Text": "Neon yozuvlar, foto lampalar va dekor sovg'alar bilan sovg'angizga zamonaviy uslub qo'shing."
+    },
     "heroSubtitle": "O'zbekistonning eng yaxshi sovg'a do'konlari bir joyda. Minglab sovg'alar — bir platformada.",
     "marketingDesc": "O'zbekistondagi eng katta sovg'alar platformasiga xush kelibsiz.",
     "featuredEyebrow": "Tanlangan mahsulotlar",
@@ -176,7 +196,9 @@
     "payment": "To'lov tizimlari",
     "delivery": "Yetkazib berish",
     "returns": "Qaytarish tartibi",
-    "security": "Xavfsizlik"
+    "security": "Xavfsizlik",
+    "paymentCard": "Karta (P2P)",
+    "paymentCash": "Naqd pul"
   },
   "custom": {
     "title": "Shaxsiy sovg'a",
