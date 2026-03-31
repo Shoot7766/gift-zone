@@ -210,5 +210,26 @@
     "sendBtn": "So'rov yuborish",
     "sentTitle": "So'rov yuborildi!",
     "sentDesc": "Do'kon tez orada javob beradi. Dashboard orqali kuzating."
+  },
+  "catalog": {
+    "filters": "Filtrlar",
+    "clear": "Tozalash",
+    "category": "Kategoriya",
+    "allCategories": "Barcha kategoriyalar",
+    "subcategory": "Subkategoriya",
+    "allSubcategories": "Barcha subkategoriyalar",
+    "priceRange": "Narx oralig'i",
+    "from": "Dan",
+    "to": "Gacha",
+    "rating": "Reyting",
+    "all": "Barchasi",
+    "sort": "Saralash",
+    "sortPopularity": "Ommaboplik",
+    "sortPriceAsc": "Narx: Arzonroq",
+    "sortPriceDesc": "Narx: Qimmatroq",
+    "sortRatingDesc": "Reyting: Yuqori",
+    "totalFound": "Jami {count} ta natija topildi",
+    "emptyTitle": "Mahsulot topilmadi",
+    "emptyDesc": "Filtrlarni yengillashtirib yoki boshqa kategoriya bilan qayta urinib ko'ring"
   }
 }

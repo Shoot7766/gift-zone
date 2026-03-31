@@ -13,6 +13,7 @@ interface Category { id: number; name: string; icon: string; slug: string; subca
 function CatalogContent() {
   const tNav = useTranslations("nav");
   const tCommon = useTranslations("common");
+  const tCatalog = useTranslations("catalog");
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -114,10 +115,10 @@ function CatalogContent() {
             style={{ background: "var(--card-bg)", borderRadius: "16px", padding: "1.5rem", boxShadow: "var(--shadow-xs)", height: "fit-content", position: "sticky", top: "88px", border: "1px solid var(--gray-100)" }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-              <h3 style={{ fontSize: "1rem", fontWeight: "700" }}>Filtrlar</h3>
+              <h3 style={{ fontSize: "1rem", fontWeight: "700" }}>{tCatalog("filters")}</h3>
               {activeFiltersCount > 0 && (
                 <button onClick={resetFilters} className="btn btn-ghost btn-sm" style={{ color: "var(--red)", padding: "0.25rem 0.5rem" }}>
-                  <X size={14} /> Tozalash
+                  <X size={14} /> {tCatalog("clear")}
                 </button>
               )}
             </div>
@@ -128,11 +129,11 @@ function CatalogContent() {
 
             {/* Category */}
             <div className="form-group">
-              <label className="form-label">Kategoriya</label>
+              <label className="form-label">{tCatalog("category")}</label>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
                 <button onClick={() => setFilters(p => ({ ...p, category: "", subcategory: "" }))}
                   style={{ textAlign: "left", padding: "0.5rem", borderRadius: "8px", border: "none", background: !filters.category ? "var(--teal-pale)" : "transparent", color: !filters.category ? "var(--teal)" : "var(--gray-600)", cursor: "pointer", fontWeight: !filters.category ? "600" : "400", fontFamily: "Outfit, sans-serif", fontSize: "0.9rem" }}>
-                  Barcha kategoriyalar
+                  {tCatalog("allCategories")}
                 </button>
                 {categories.map(cat => (
                   <button key={cat.id} onClick={() => setFilters(p => ({ ...p, category: cat.slug, subcategory: "" }))}
@@ -147,13 +148,13 @@ function CatalogContent() {
               <>
                 <div style={{ height: "1px", background: "var(--gray-100)", margin: "1rem 0" }} />
                 <div className="form-group">
-                  <label className="form-label">Subkategoriya</label>
+                  <label className="form-label">{tCatalog("subcategory")}</label>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", maxHeight: "200px", overflowY: "auto" }}>
                     <button
                       onClick={() => setFilters(p => ({ ...p, subcategory: "" }))}
                       style={{ textAlign: "left", padding: "0.45rem", borderRadius: "8px", border: "none", background: !filters.subcategory ? "var(--teal-pale)" : "transparent", color: !filters.subcategory ? "var(--teal)" : "var(--gray-600)", cursor: "pointer", fontSize: "0.85rem" }}
                     >
-                      Barcha subkategoriyalar
+                      {tCatalog("allSubcategories")}
                     </button>
                     {(categories.find((c) => c.slug === filters.category)?.subcategories || []).map((sub) => (
                       <button
@@ -187,13 +188,13 @@ function CatalogContent() {
 
             {/* Price */}
             <div className="form-group">
-              <label className="form-label">Narx oralig'i</label>
+              <label className="form-label">{tCatalog("priceRange")}</label>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                <input type="number" placeholder="Dan" className="form-input"
+                <input type="number" placeholder={tCatalog("from")} className="form-input"
                   value={filters.minPrice}
                   onChange={e => setFilters(p => ({ ...p, minPrice: e.target.value }))}
                   style={{ fontSize: "0.875rem", width: "100%" }} />
-                <input type="number" placeholder="Gacha" className="form-input"
+                <input type="number" placeholder={tCatalog("to")} className="form-input"
                   value={filters.maxPrice}
                   onChange={e => setFilters(p => ({ ...p, maxPrice: e.target.value }))}
                   style={{ fontSize: "0.875rem", width: "100%" }} />
@@ -204,11 +205,11 @@ function CatalogContent() {
 
             {/* Rating */}
             <div className="form-group">
-              <label className="form-label">Reyting</label>
+              <label className="form-label">{tCatalog("rating")}</label>
               <select className="form-input" style={{ width: "100%", padding: "0.5rem" }}
                 value={filters.rating}
                 onChange={e => setFilters(p => ({ ...p, rating: e.target.value }))}>
-                <option value="">Barchasi</option>
+                <option value="">{tCatalog("all")}</option>
                 <option value="4">4+ ★</option>
                 <option value="3">3+ ★</option>
               </select>
@@ -219,21 +220,21 @@ function CatalogContent() {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "1rem" }}>
               <p style={{ color: "var(--gray-400)", fontSize: "0.9rem", fontWeight: "600" }}>
-                {loading ? "Yuklanmoqda..." : `Jami ${products.length} ta natija topildi`}
+                {loading ? tCommon("loading") : tCatalog("totalFound", { count: products.length })}
               </p>
 
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                 <span style={{ fontSize: "0.85rem", color: "var(--gray-500)", fontWeight: "700" }}>Saralash:</span>
+                 <span style={{ fontSize: "0.85rem", color: "var(--gray-500)", fontWeight: "700" }}>{tCatalog("sort")}:</span>
                  <select 
                     className="form-input" 
                     style={{ padding: "0.4rem 0.75rem", borderRadius: "10px", fontSize: "0.85rem", width: "auto", border: "1px solid var(--gray-200)" }}
                     value={filters.sort}
                     onChange={e => setFilters(p => ({ ...p, sort: e.target.value }))}
                  >
-                    <option value="popularity">Ommaboplik</option>
-                    <option value="price_asc">Narx: Arzonroq</option>
-                    <option value="price_desc">Narx: Qimmatroq</option>
-                    <option value="rating_desc">Reyting: Yuqori</option>
+                    <option value="popularity">{tCatalog("sortPopularity")}</option>
+                    <option value="price_asc">{tCatalog("sortPriceAsc")}</option>
+                    <option value="price_desc">{tCatalog("sortPriceDesc")}</option>
+                    <option value="rating_desc">{tCatalog("sortRatingDesc")}</option>
                  </select>
               </div>
             </div>
@@ -277,12 +278,12 @@ function CatalogContent() {
                 <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <EmojiEmpty
                     icon={<SearchX size={40} />}
-                    title="Mahsulot topilmadi"
-                    desc="Filtrlarni yengillashtirib yoki boshqa kategoriya bilan qayta urinib ko'ring"
+                    title={tCatalog("emptyTitle")}
+                    desc={tCatalog("emptyDesc")}
                   />
                   <div style={{ display: "flex", justifyContent: "center", marginTop: "1.25rem" }}>
                     <button type="button" className="btn btn-primary" onClick={resetFilters}>
-                      Filtrlarni tozalash
+                      {tCatalog("clear")}
                     </button>
                   </div>
                 </motion.div>

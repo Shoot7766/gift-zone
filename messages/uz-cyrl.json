@@ -211,5 +211,26 @@
     "sendBtn": "Сўров юбориш",
     "sentTitle": "Сўров юборилди!",
     "sentDesc": "Дўкон тез орада жавоб беradi. Dashboard орқали кузатинг."
+  },
+  "catalog": {
+    "filters": "Фильтрлар",
+    "clear": "Тозалаш",
+    "category": "Категория",
+    "allCategories": "Барча категориялар",
+    "subcategory": "Субкатегория",
+    "allSubcategories": "Барча субкатегориялар",
+    "priceRange": "Нарх оралиғи",
+    "from": "Дан",
+    "to": "Гача",
+    "rating": "Рейтинг",
+    "all": "Барчаси",
+    "sort": "Саралаш",
+    "sortPopularity": "Оммабоплик",
+    "sortPriceAsc": "Нарх: Арзонроқ",
+    "sortPriceDesc": "Нарх: Қимматроқ",
+    "sortRatingDesc": "Рейтинг: Юқори",
+    "totalFound": "Жами {count} та натижа топилди",
+    "emptyTitle": "Маҳсулот топилмади",
+    "emptyDesc": "Фильтрларни енгиллаштириб ёки бошқа категория билан қайта уриниб кўринг"
   }
 }

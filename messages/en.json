@@ -210,5 +210,26 @@
     "sendBtn": "Send Request",
     "sentTitle": "Request Sent!",
     "sentDesc": "The shop will respond soon. Track your updates in your dashboard."
+  },
+  "catalog": {
+    "filters": "Filters",
+    "clear": "Clear",
+    "category": "Category",
+    "allCategories": "All categories",
+    "subcategory": "Subcategory",
+    "allSubcategories": "All subcategories",
+    "priceRange": "Price range",
+    "from": "From",
+    "to": "To",
+    "rating": "Rating",
+    "all": "All",
+    "sort": "Sort",
+    "sortPopularity": "Popularity",
+    "sortPriceAsc": "Price: Low to High",
+    "sortPriceDesc": "Price: High to Low",
+    "sortRatingDesc": "Rating: High",
+    "totalFound": "Found {count} results",
+    "emptyTitle": "No products found",
+    "emptyDesc": "Try loosening filters or switching to another category"
   }
 }
