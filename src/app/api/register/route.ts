@@ -66,7 +66,8 @@ export async function POST(req: NextRequest) {
 
     return apiSuccess({ message: "Ro'yxatdan o'tish muvaffaqiyatli!" });
   } catch (e) {
-    console.error(e);
-    return apiError("Xatolik yuz berdi");
+    const message = e instanceof Error ? e.message : "Xatolik yuz berdi";
+    console.error("Register error:", e);
+    return apiError(message, 500, "REGISTER_ERROR");
   }
 }

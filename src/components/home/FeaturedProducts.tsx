@@ -219,10 +219,22 @@ export default function FeaturedProducts({ limit = 8 }: { limit?: number }) {
   const tCommon = useTranslations("common");
 
   useEffect(() => {
-    fetch(`/api/products?limit=${limit}`)
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => {
+      controller.abort();
+      setLoading(false);
+    }, 10000);
+
+    fetch(`/api/products?limit=${limit}`, { signal: controller.signal })
       .then((r) => r.json())
       .then((d) => { setProducts(d.products || []); setLoading(false); })
-      .catch(() => setLoading(false));
+      .catch(() => setLoading(false))
+      .finally(() => window.clearTimeout(timeout));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeout);
+    };
   }, [limit]);
 
   return (

@@ -5,7 +5,9 @@ import path from "path";
 import bcrypt from "bcryptjs";
 import { CATEGORY_CATALOG } from "@/lib/categoryCatalog";
 
-const dbPath = path.join(process.cwd(), "sovga.db");
+const dbPath = process.env.VERCEL
+  ? path.join("/tmp", "sovga.db")
+  : path.join(process.cwd(), "sovga.db");
 const sqlite = new Database(dbPath);
 
 // Enable WAL mode for better performance
