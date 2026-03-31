@@ -87,7 +87,7 @@ export default function Footer() {
           <div>
             <div className="footer-title">{t("contact")}</div>
             {[
-              { icon: <Phone size={14} />, label: "93 310 07 64" },
+              { icon: <Phone size={14} />, label: "+998 93 310-07-64" },
             ].map((c) => (
               <div key={c.label} style={{ display: "flex", alignItems: "center", gap: "0.625rem", marginBottom: "0.75rem", color: "rgba(255,255,255,0.6)", fontSize: "0.875rem" }}>
                 <span style={{ color: "var(--gold-light)", flexShrink: 0 }}>{c.icon}</span>

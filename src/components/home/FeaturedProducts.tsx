@@ -6,7 +6,6 @@ import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useToast } from "@/components/Toast";
 import { formatPrice } from "@/lib/utils";
-import { GlobalLoader } from "@/components/Loader";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -263,8 +262,8 @@ export default function FeaturedProducts({ limit = 8 }: { limit?: number }) {
             : products.length > 0
             ? products.map((p) => <ProductCard key={p.id} product={p} />)
             : (
-              <div style={{ gridColumn: "1/-1", padding: "4rem 0" }}>
-                <GlobalLoader />
+              <div style={{ gridColumn: "1/-1", padding: "2.5rem 0", textAlign: "center", color: "var(--gray-500)" }}>
+                Hozircha mahsulot topilmadi
               </div>
             )}
         </motion.div>

@@ -41,7 +41,17 @@ function RegisterForm() {
   const normalizeUzPhone = (raw: string) => {
     const digits = raw.replace(/\D/g, "");
     const withoutCountry = digits.startsWith("998") ? digits.slice(3) : digits;
-    return `+998${withoutCountry.slice(0, 9)}`;
+    const d = withoutCountry.slice(0, 9);
+    const p1 = d.slice(0, 2);
+    const p2 = d.slice(2, 5);
+    const p3 = d.slice(5, 7);
+    const p4 = d.slice(7, 9);
+    let out = "+998";
+    if (p1) out += ` ${p1}`;
+    if (p2) out += ` ${p2}`;
+    if (p3) out += `-${p3}`;
+    if (p4) out += `-${p4}`;
+    return out;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,8 +59,8 @@ function RegisterForm() {
     if (!form.firstName.trim() || !form.lastName.trim()) {
       return setError("Ism va familya alohida to'ldirilishi shart");
     }
-    if (!/^\+998\d{9}$/.test(form.phone)) {
-      return setError("Telefon raqam +998 bilan va 9 ta raqamda bo'lishi shart");
+    if (!/^\+998 \d{2} \d{3}-\d{2}-\d{2}$/.test(form.phone)) {
+      return setError("Telefon raqam +998 AA AAA-AA-AA ko'rinishida bo'lishi shart");
     }
     if (!isStrongPassword(form.password)) {
       return setError("Parol: kamida 8 belgi, 1 katta harf, 1 kichik harf, 1 raqam va 1 maxsus belgi bo'lishi shart");
@@ -65,18 +75,21 @@ function RegisterForm() {
         body: JSON.stringify({
           name: `${form.firstName.trim()} ${form.lastName.trim()}`,
           email: form.email,
-          phone: form.phone,
+          phone: form.phone.replace(/\D/g, "").replace(/^998/, "+998"),
           password: form.password,
           role: form.role,
         })
       });
 
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(async () => {
+        const text = await res.text().catch(() => "");
+        return { error: text || undefined };
+      });
       if (res.ok) {
         toast(t("registerSuccess") || "Muvaffaqiyatli ro'yxatdan o'tdingiz!", "success");
         router.push(`/kirish?redirect=${redirect}`);
       } else {
-        setError(data.error || "Xatolik ro'y berdi");
+        setError(data.error || data.message || `Xatolik (${res.status})`);
       }
     } catch {
       setError("Tarmoq xatosi. Qayta urinib ko'ring");
@@ -86,7 +99,7 @@ function RegisterForm() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", background: "var(--warm-white)" }}>
+    <div style={{ minHeight: "100vh", display: "flex", background: "linear-gradient(180deg, #090E1C 0%, #0D1424 100%)" }}>
       {/* Left Marketing Panel */}
       <motion.div 
         initial={{ x: -100, opacity: 0 }}
@@ -138,9 +151,7 @@ function RegisterForm() {
           </div>
         </div>
 
-        <div style={{ fontSize: "0.9rem", color: "var(--gray-500)", zIndex: 10 }}>
-          &copy; {new Date().getFullYear()} Gift Zone platformasi.
-        </div>
+        <div />
       </motion.div>
 
       {/* Right Form Panel */}
@@ -216,7 +227,7 @@ function RegisterForm() {
               <input
                 type="tel"
                 className="form-input"
-                placeholder="+998901234567"
+                placeholder="+998 93 310-07-64"
                 value={form.phone}
                 onChange={e => setForm(p => ({ ...p, phone: normalizeUzPhone(e.target.value) }))}
                 required
