@@ -29,7 +29,7 @@ export default function Footer() {
           <div>
             <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.9rem", marginBottom: "1rem" }}>
               <img
-                src="/api/site-logo"
+                src="/api/site-logo?v=3"
                 alt="Gift Zone"
                 style={{
                   width: "56px",

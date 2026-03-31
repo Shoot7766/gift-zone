@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     "O'zbekistondagi sovg'alar platformasi — minglab sovg'alar, tez yetkazib berish.",
   metadataBase: new URL("https://sovga.uz"),
   icons: {
-    icon: "/api/site-logo",
-    apple: "/api/site-logo",
-    shortcut: "/api/site-logo",
+    icon: "/api/site-logo?v=3",
+    apple: "/api/site-logo?v=3",
+    shortcut: "/api/site-logo?v=3",
   },
 };
 

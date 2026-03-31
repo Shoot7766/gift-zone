@@ -150,7 +150,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="navbar-logo" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <img
-              src="/api/site-logo"
+              src="/api/site-logo?v=3"
               alt="Gift Zone"
               style={{
                 width: "44px",

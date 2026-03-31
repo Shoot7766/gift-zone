@@ -19,7 +19,7 @@ export async function GET() {
     return new Response(new Blob([file], { type: "image/png" }), {
       headers: {
         "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=31536000, immutable",
+        "Cache-Control": "no-store, max-age=0",
       },
     });
   } catch {
@@ -27,7 +27,7 @@ export async function GET() {
     return new Response(svg, {
       headers: {
         "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "public, max-age=86400",
+        "Cache-Control": "no-store, max-age=0",
       },
     });
   }
