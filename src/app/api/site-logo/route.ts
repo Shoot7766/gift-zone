@@ -6,13 +6,15 @@ const LOGO_PATH =
 
 export async function GET() {
   try {
-    let file: Uint8Array;
+    let file: ArrayBuffer;
     try {
       const buffer = await readFile(path.join(process.cwd(), "public", "logo.png"));
-      file = new Uint8Array(buffer);
+      file = new ArrayBuffer(buffer.byteLength);
+      new Uint8Array(file).set(buffer);
     } catch {
       const buffer = await readFile(LOGO_PATH);
-      file = new Uint8Array(buffer);
+      file = new ArrayBuffer(buffer.byteLength);
+      new Uint8Array(file).set(buffer);
     }
     return new Response(new Blob([file], { type: "image/png" }), {
       headers: {
