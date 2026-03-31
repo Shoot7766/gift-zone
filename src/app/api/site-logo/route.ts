@@ -14,7 +14,7 @@ export async function GET() {
       const buffer = await readFile(LOGO_PATH);
       file = new Uint8Array(buffer);
     }
-    return new Response(file, {
+    return new Response(new Blob([file], { type: "image/png" }), {
       headers: {
         "Content-Type": "image/png",
         "Cache-Control": "public, max-age=31536000, immutable",
