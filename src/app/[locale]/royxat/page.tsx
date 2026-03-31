@@ -87,7 +87,17 @@ function RegisterForm() {
       });
       if (res.ok) {
         toast(t("registerSuccess") || "Muvaffaqiyatli ro'yxatdan o'tdingiz!", "success");
-        router.push(`/kirish?redirect=${redirect}`);
+        const loginRes = await signIn("credentials", {
+          email: form.email.trim().toLowerCase(),
+          password: form.password,
+          redirect: false,
+        });
+        if (!loginRes?.error) {
+          router.push(redirect as any);
+          router.refresh();
+        } else {
+          router.push(`/kirish?redirect=${redirect}&email=${encodeURIComponent(form.email.trim().toLowerCase())}`);
+        }
       } else {
         setError(data.error || data.message || `Xatolik (${res.status})`);
       }

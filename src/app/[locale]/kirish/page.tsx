@@ -27,13 +27,21 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
+  useEffect(() => {
+    const emailFromQuery = searchParams.get("email");
+    if (emailFromQuery) {
+      setForm((prev) => ({ ...prev, email: emailFromQuery }));
+    }
+  }, [searchParams]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+    const normalizedEmail = form.email.trim().toLowerCase();
 
     const res = await signIn("credentials", {
-      email: form.email,
+      email: normalizedEmail,
       password: form.password,
       redirect: false,
     });
@@ -110,9 +118,7 @@ function LoginForm() {
           </div>
         </div>
 
-        <div style={{ fontSize: "0.9rem", color: "var(--gray-500)", zIndex: 10 }}>
-          &copy; {new Date().getFullYear()} Gift Zone platformasi.
-        </div>
+        <div />
       </motion.div>
 
       {/* Right Form Panel */}
@@ -151,7 +157,7 @@ function LoginForm() {
             <div className="form-group" style={{ marginBottom: "0.5rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
                 <label className="form-label" style={{ marginBottom: 0, fontWeight: "600" }}>{t("password")}</label>
-                <Link href="#" style={{ fontSize: "0.85rem", color: "var(--teal)", fontWeight: "600", textDecoration: "none" }}>{t("forgotPassword")}</Link>
+                <Link href="/yordam?q=parol" style={{ fontSize: "0.85rem", color: "var(--teal)", fontWeight: "600", textDecoration: "none" }}>{t("forgotPassword")}</Link>
               </div>
               <div style={{ position: "relative" }}>
                 <input type={showPass ? "text" : "password"} className="form-input" placeholder="••••••••"

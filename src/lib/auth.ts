@@ -23,11 +23,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
+        const email = String(credentials.email).trim().toLowerCase();
+        const password = String(credentials.password);
 
         try {
           const user = db.$client
             .prepare("SELECT * FROM users WHERE email = ?")
-            .get(credentials.email as string) as {
+            .get(email) as {
               id: string;
               name: string;
               email: string;
@@ -40,7 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!user) return null;
 
           const isValid = await bcrypt.compare(
-            credentials.password as string,
+            password,
             user.password
           );
           if (!isValid) return null;
