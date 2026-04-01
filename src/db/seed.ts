@@ -78,10 +78,10 @@ async function seed() {
   const userStmt = db.$client.prepare(`
     INSERT OR IGNORE INTO users (id, name, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)
   `);
-  userStmt.run(adminId, "Admin", "admin@sovga.uz", hashedAdmin, "+998901234567", "admin");
-  userStmt.run(customerId, "Alisher Nazarov", "user@sovga.uz", hashedUser, "+998901112233", "customer");
-  userStmt.run(providerId1, "Gulnora Rahimova", "shop1@sovga.uz", hashedProvider, "+998909876543", "provider");
-  userStmt.run(providerId2, "Jasur Toshmatov", "shop2@sovga.uz", hashedProvider, "+998907654321", "provider");
+  userStmt.run(adminId, "Admin", "admin@giftzone.uz", hashedAdmin, "+998901234567", "admin");
+  userStmt.run(customerId, "Alisher Nazarov", "user@giftzone.uz", hashedUser, "+998901112233", "customer");
+  userStmt.run(providerId1, "Gulnora Rahimova", "shop1@giftzone.uz", hashedProvider, "+998909876543", "provider");
+  userStmt.run(providerId2, "Jasur Toshmatov", "shop2@giftzone.uz", hashedProvider, "+998907654321", "provider");
 
   // Shops
   const shopId1 = uuidv4();
@@ -165,9 +165,9 @@ async function seed() {
   });
 
   console.log("✅ Ma'lumotlar bazasi muvaffaqiyatli to'ldirildi!");
-  console.log("📧 Admin: admin@sovga.uz / admin123");
-  console.log("📧 Mijoz: user@sovga.uz / user123");
-  console.log("📧 Do'kon: shop1@sovga.uz / shop123");
+  console.log("📧 Admin: admin@giftzone.uz / admin123");
+  console.log("📧 Mijoz: user@giftzone.uz / user123");
+  console.log("📧 Do'kon: shop1@giftzone.uz / shop123");
   process.exit(0);
 }
 

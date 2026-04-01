@@ -2,6 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, Link } from "@/navigation";
+import { useLocale } from "next-intl";
 import { GlobalLoader } from "@/components/Loader";
 import { formatPrice, ORDER_STATUS_UZ, ORDER_STATUS_BG, PAYMENT_STATUS_UZ } from "@/lib/utils";
 import { Users, Store, Package, CreditCard, BarChart2, ShieldCheck, Ban, Trash2, CheckCircle, MessageCircle, Clock, AlertTriangle, Image as ImageIcon, DollarSign, XCircle } from "lucide-react";
@@ -19,6 +20,8 @@ type Tab =
   | "ai_queries";
 
 export default function AdminPanel() {
+  const locale = useLocale();
+  const isRu = locale === "ru";
   const { data: session, status } = useSession();
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("stats");
@@ -111,16 +114,16 @@ export default function AdminPanel() {
   };
 
   const navTabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
-    { id: "stats", label: "Statistika", icon: <BarChart2 size={18} /> },
-    { id: "users", label: "Foydalanuvchilar", icon: <Users size={18} /> },
-    { id: "shops", label: "Do'konlar", icon: <Store size={18} /> },
-    { id: "orders", label: "Buyurtmalar", icon: <Package size={18} /> },
-    { id: "payments", label: "P2P To'lovlar", icon: <CreditCard size={18} /> },
-    { id: "chats", label: "Suhbatlar", icon: <MessageCircle size={18} /> },
-    { id: "moliya", label: "Moliya", icon: <DollarSign size={18} /> },
-    { id: "broadcast", label: "Xabar yuborish", icon: <MessageCircle size={18} /> },
-    { id: "ai_queries", label: "AI So'rovlar", icon: <MessageCircle size={18} /> },
-    { id: "audit", label: "Audit log", icon: <Clock size={18} /> },
+    { id: "stats", label: isRu ? "Статистика" : "Statistika", icon: <BarChart2 size={18} /> },
+    { id: "users", label: isRu ? "Пользователи" : "Foydalanuvchilar", icon: <Users size={18} /> },
+    { id: "shops", label: isRu ? "Магазины" : "Do'konlar", icon: <Store size={18} /> },
+    { id: "orders", label: isRu ? "Заказы" : "Buyurtmalar", icon: <Package size={18} /> },
+    { id: "payments", label: isRu ? "P2P Платежи" : "P2P To'lovlar", icon: <CreditCard size={18} /> },
+    { id: "chats", label: isRu ? "Чаты" : "Suhbatlar", icon: <MessageCircle size={18} /> },
+    { id: "moliya", label: isRu ? "Финансы" : "Moliya", icon: <DollarSign size={18} /> },
+    { id: "broadcast", label: isRu ? "Рассылка" : "Xabar yuborish", icon: <MessageCircle size={18} /> },
+    { id: "ai_queries", label: isRu ? "AI Запросы" : "AI So'rovlar", icon: <MessageCircle size={18} /> },
+    { id: "audit", label: isRu ? "Аудит лог" : "Audit log", icon: <Clock size={18} /> },
   ];
 
   const auditLogs = useMemo(() => data?.auditLogs || [], [data?.auditLogs]);
@@ -439,6 +442,7 @@ export default function AdminPanel() {
                 <tr>
                   <th style={{ padding: "1rem 1.5rem", fontWeight: "800" }}>Do'kon nomi</th>
                   <th style={{ padding: "1rem 1.5rem", fontWeight: "800" }}>Shahar</th>
+                  <th style={{ padding: "1rem 1.5rem", fontWeight: "800" }}>Setup</th>
                   <th style={{ padding: "1rem 1.5rem", fontWeight: "800" }}>Holati</th>
                   <th style={{ padding: "1rem 1.5rem", fontWeight: "800", textAlign: "right" }}>Harakat</th>
                 </tr>
@@ -448,6 +452,17 @@ export default function AdminPanel() {
                   <tr key={s.id} style={{ borderBottom: "1px solid var(--gray-100)" }}>
                     <td style={{ padding: "1rem 1.5rem", fontWeight: "700", color: "var(--dark)" }}>{s.name}</td>
                     <td style={{ padding: "1rem 1.5rem" }}>{s.city_name || "-"}</td>
+                    <td style={{ padding: "1rem 1.5rem" }}>
+                      <div style={{ minWidth: "140px" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--gray-500)", marginBottom: "0.25rem", fontWeight: 700 }}>
+                          <span>{s.setup_score || 0}%</span>
+                          <span>{s.products_count || 0} mahs.</span>
+                        </div>
+                        <div style={{ width: "100%", height: "6px", background: "var(--gray-100)", borderRadius: "999px", overflow: "hidden" }}>
+                          <div style={{ width: `${s.setup_score || 0}%`, height: "100%", background: "linear-gradient(90deg, var(--gold-dark), var(--teal))" }} />
+                        </div>
+                      </div>
+                    </td>
                     <td style={{ padding: "1rem 1.5rem" }}>
                        <span className={`badge badge-${s.is_verified ? "green" : "red"}`}>
                         {s.is_verified ? "Tasdiqlangan" : "Kutilmoqda"}

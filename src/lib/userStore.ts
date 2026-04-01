@@ -22,15 +22,17 @@ let tursoClient: LibsqlClient | null = null;
 let tursoReady: Promise<void> | null = null;
 
 function hasTursoConfig() {
-  return Boolean(process.env.TURSO_DATABASE_URL && process.env.TURSO_AUTH_TOKEN);
+  const dbUrl = process.env.TURSO_DATABASE_URL || process.env.LIBSQL_URL;
+  const token = process.env.TURSO_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN;
+  return Boolean(dbUrl && token);
 }
 
 function getTursoClient() {
   if (!hasTursoConfig()) return null;
   if (!tursoClient) {
     tursoClient = createClient({
-      url: String(process.env.TURSO_DATABASE_URL),
-      authToken: String(process.env.TURSO_AUTH_TOKEN),
+      url: String(process.env.TURSO_DATABASE_URL || process.env.LIBSQL_URL),
+      authToken: String(process.env.TURSO_AUTH_TOKEN || process.env.LIBSQL_AUTH_TOKEN),
     });
   }
   return tursoClient;

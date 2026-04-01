@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { db, initDb } from "@/db";
+import { getSiteUrl } from "@/lib/site";
 
 const locales = ["uz", "uz-cyrl", "ru", "en"] as const;
 const staticPaths = [
@@ -14,6 +15,7 @@ const staticPaths = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const origin = getSiteUrl().origin;
   try {
     initDb();
   } catch {}
@@ -33,13 +35,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticUrls = locales.flatMap((locale) =>
     staticPaths.map((path) => ({
-      url: `https://sovga.uz/${locale}${path}`,
+      url: `${origin}/${locale}${path}`,
       lastModified: now,
       changeFrequency: resolveChangeFrequency(path),
       priority: path === "" ? 1 : 0.7,
       alternates: {
         languages: Object.fromEntries(
-          locales.map((loc) => [loc, `https://sovga.uz/${loc}${path}`])
+          locales.map((loc) => [loc, `${origin}/${loc}${path}`])
         ),
       },
     }))
@@ -47,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const productUrls = locales.flatMap((locale) =>
     products.map((product) => ({
-      url: `https://sovga.uz/${locale}/mahsulot/${product.id}`,
+      url: `${origin}/${locale}/mahsulot/${product.id}`,
       lastModified: product.created_at ? new Date(product.created_at) : now,
       changeFrequency: "weekly" as const,
       priority: 0.8,
@@ -55,7 +57,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         languages: Object.fromEntries(
           locales.map((loc) => [
             loc,
-            `https://sovga.uz/${loc}/mahsulot/${product.id}`,
+            `${origin}/${loc}/mahsulot/${product.id}`,
           ])
         ),
       },
@@ -64,13 +66,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const shopUrls = locales.flatMap((locale) =>
     shops.map((shop) => ({
-      url: `https://sovga.uz/${locale}/dokon/${shop.id}`,
+      url: `${origin}/${locale}/dokon/${shop.id}`,
       lastModified: shop.created_at ? new Date(shop.created_at) : now,
       changeFrequency: "weekly" as const,
       priority: 0.75,
       alternates: {
         languages: Object.fromEntries(
-          locales.map((loc) => [loc, `https://sovga.uz/${loc}/dokon/${shop.id}`])
+          locales.map((loc) => [loc, `${origin}/${loc}/dokon/${shop.id}`])
         ),
       },
     }))

@@ -5,7 +5,7 @@ export default function OrganizationJsonLd() {
   const payload = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Sovg'a.uz",
+    name: "Gift Zone",
     url: origin,
     description: "O'zbekistonda sovg'a buyurtma qilish platformasi",
     sameAs: [] as string[],

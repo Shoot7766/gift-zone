@@ -87,31 +87,35 @@ export default function Navbar() {
       : session?.user?.role === "provider"
       ? "/provider/profil"
       : dashHref;
-  const isCustomerRole = !session?.user?.role || session.user.role === "customer";
+  const role = session?.user?.role;
+  const isCustomerRole = !role || role === "customer";
+  const isProviderRole = role === "provider";
+  const isAdminRole = role === "admin";
 
-  const navLinks = [{ href: "/dokonlar", label: t("shops") }];
+  const navLinks =
+    isProviderRole || isAdminRole
+      ? []
+      : [{ href: "/dokonlar", label: t("shops") }];
 
   const userMenuItems = session
     ? session.user?.role === "admin"
       ? [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: "/admin", label: t("adminPanel") || (isRu ? "Панель управления" : "Boshqaruv paneli"), icon: <Shield size={16} /> },
-          { href: "/provider", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
         ]
       : session.user?.role === "provider"
       ? [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
           { href: "/provider", label: t("dashboard"), icon: <LayoutDashboard size={16} /> },
-          { href: "/provider", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
           { href: "/provider/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
           { href: "/provider/chat", label: isRu ? "Сообщения" : "Xabarlar", icon: <MessageCircle size={16} /> },
           { href: "/provider/dokon", label: t("myShop") || (isRu ? "Мой магазин" : "Do'konim"), icon: <Store size={16} /> },
+          { href: "/provider/mahsulotlar", label: isRu ? "Товары" : "Mahsulotlar", icon: <ShoppingCart size={16} /> },
         ]
       : [
           { href: profileHref, label: t("profile"), icon: <CircleUser size={16} /> },
-          { href: dashHref, label: isRu ? "Мои заказы" : "Buyurtmalarim", icon: <LayoutDashboard size={16} /> },
+          { href: "/dashboard/buyurtmalar", label: isRu ? "Мои заказы" : "Buyurtmalarim", icon: <LayoutDashboard size={16} /> },
           { href: "/hamyon", label: isRu ? "Кошелек" : "Hamyon", icon: <ShoppingCart size={16} /> },
-          { href: "/dashboard/buyurtmalar", label: t("orders") || "Buyurtmalar", icon: <Package size={16} /> },
           {
             href: "/dashboard/chat",
             label: isRu ? "Сообщения" : "Xabarlar",
@@ -195,7 +199,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {!pathname.includes("/katalog") && (
+          {!pathname.includes("/katalog") && !isProviderRole && !isAdminRole && (
           <form onSubmit={handleSearch} className="desktop-only" style={{ flex: 1, maxWidth: "300px", margin: "0 2rem", position: "relative" }}>
              <Search size={16} style={{ position: "absolute", left: "1rem", top: "50%", transform: "translateY(-50%)", color: "var(--gray-400)" }} />
              <input 

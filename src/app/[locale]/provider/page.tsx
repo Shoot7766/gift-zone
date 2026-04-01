@@ -156,32 +156,6 @@ export default function ProviderDashboard() {
         </div>
       </div>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "18px",
-          padding: "1rem",
-          marginBottom: "1.25rem",
-          boxShadow: "var(--shadow-xs)",
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          gap: "0.75rem",
-        }}
-      >
-        <Link href="/provider/mahsulotlar/yangi" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Mahsulot qo'shish
-        </Link>
-        <Link href="/provider/buyurtmalar" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Buyurtmalar
-        </Link>
-        <Link href="/provider/promo" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Promo va shablonlar
-        </Link>
-        <Link href="/provider/dokon" className="btn btn-ghost" style={{ justifyContent: "center" }}>
-          Mening do'konim
-        </Link>
-      </div>
-
       {providerTab === "analytics" && (
       <>
       <motion.div 

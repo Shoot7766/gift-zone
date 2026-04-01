@@ -56,9 +56,9 @@ function LoginForm() {
   };
 
   const fillDemo = (role: string) => {
-    if (role === "admin") setForm({ email: "admin@sovga.uz", password: "admin123" });
-    if (role === "customer") setForm({ email: "user@sovga.uz", password: "user123" });
-    if (role === "provider") setForm({ email: "shop1@sovga.uz", password: "shop123" });
+    if (role === "admin") setForm({ email: "admin@giftzone.uz", password: "admin123" });
+    if (role === "customer") setForm({ email: "user@giftzone.uz", password: "user123" });
+    if (role === "provider") setForm({ email: "shop1@giftzone.uz", password: "shop123" });
   };
 
   return (
@@ -90,7 +90,7 @@ function LoginForm() {
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none", zIndex: 10 }}>
           <Gift size={36} color="var(--gold)" strokeWidth={2.5} />
           <span style={{ fontSize: "2rem", fontWeight: "900", color: "white", letterSpacing: "-0.02em" }}>
-            Sovg&apos;<span style={{ color: "var(--gold)" }}>a</span>.uz
+            Gift <span style={{ color: "var(--gold)" }}>Zone</span>
           </span>
         </Link>
 

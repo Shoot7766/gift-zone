@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { getSiteUrl } from "@/lib/site";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   title: "Gift Zone",
   description:
     "O'zbekistondagi sovg'alar platformasi — minglab sovg'alar, tez yetkazib berish.",
-  metadataBase: new URL("https://sovga.uz"),
+  metadataBase: getSiteUrl(),
   icons: {
     icon: "/api/site-logo?v=3",
     apple: "/api/site-logo?v=3",

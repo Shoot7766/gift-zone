@@ -16,7 +16,6 @@ export default function Footer() {
     help: [
       { href: "/yordam", label: t("help") },
       { href: "/yordam?q=yetkazish", label: t("delivery") },
-      { href: "/yordam?q=qaytarish", label: t("returns") },
       { href: "/yordam?q=xavfsizlik", label: t("security") },
     ],
   };

@@ -1,4 +1,5 @@
 import { db, initDb } from "@/db";
+import { getSiteUrl } from "@/lib/site";
 
 type Params = {
   params: Promise<{ locale: string; id: string }>;
@@ -8,6 +9,7 @@ const locales = ["uz", "uz-cyrl", "ru", "en"] as const;
 
 export default async function Head({ params }: Params) {
   const { locale, id } = await params;
+  const origin = getSiteUrl().origin;
   try {
     initDb();
   } catch {}
@@ -30,7 +32,7 @@ export default async function Head({ params }: Params) {
   const description = shop
     ? `${shop.name}${shop.city_name ? ` (${shop.city_name})` : ""}. ${shop.description || "Gift Zone do'kon sahifasi."}`
     : "Gift Zone do'kon sahifasi.";
-  const canonical = `https://sovga.uz/${locale}/dokon/${id}`;
+  const canonical = `${origin}/${locale}/dokon/${id}`;
 
   return (
     <>
@@ -42,10 +44,10 @@ export default async function Head({ params }: Params) {
           key={loc}
           rel="alternate"
           hrefLang={loc}
-          href={`https://sovga.uz/${loc}/dokon/${id}`}
+          href={`${origin}/${loc}/dokon/${id}`}
         />
       ))}
-      <link rel="alternate" hrefLang="x-default" href={`https://sovga.uz/uz/dokon/${id}`} />
+      <link rel="alternate" hrefLang="x-default" href={`${origin}/uz/dokon/${id}`} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />

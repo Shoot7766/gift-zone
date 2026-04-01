@@ -73,6 +73,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/kirish",
   },
+  trustHost: true,
   session: { strategy: "jwt" },
   secret: authSecret,
 });

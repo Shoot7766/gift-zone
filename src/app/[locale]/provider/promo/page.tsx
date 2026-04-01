@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/components/Toast";
+import { useLocale } from "next-intl";
 
 type Coupon = {
   id: string;
@@ -23,6 +24,8 @@ type QuickReply = {
 
 export default function ProviderPromoPage() {
   const { toast } = useToast();
+  const locale = useLocale();
+  const isRu = locale === "ru";
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [quickReplies, setQuickReplies] = useState<QuickReply[]>([]);
   const [loading, setLoading] = useState(true);
@@ -121,12 +124,12 @@ export default function ProviderPromoPage() {
     loadAll();
   };
 
-  if (loading) return <div style={{ padding: "2rem" }}>Yuklanmoqda...</div>;
+  if (loading) return <div style={{ padding: "2rem" }}>{isRu ? "Загрузка..." : "Yuklanmoqda..."}</div>;
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "1.5rem" }}>
       <section style={{ background: "white", borderRadius: 20, padding: "1.25rem", boxShadow: "var(--shadow-xs)" }}>
-        <h2 style={{ fontWeight: 900, marginBottom: "1rem" }}>Promo kuponlar</h2>
+        <h2 style={{ fontWeight: 900, marginBottom: "1rem" }}>{isRu ? "Промо-купоны" : "Promo kuponlar"}</h2>
         <form onSubmit={createCoupon} style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem" }}>
             <input className="form-input" placeholder="Kod (WELCOME10)" value={couponForm.code} onChange={(e) => setCouponForm((p) => ({ ...p, code: e.target.value.toUpperCase() }))} required />
@@ -144,7 +147,7 @@ export default function ProviderPromoPage() {
             <input className="form-input" type="number" placeholder="Foydalanish limiti" value={couponForm.usageLimit} onChange={(e) => setCouponForm((p) => ({ ...p, usageLimit: e.target.value }))} />
             <input className="form-input" type="datetime-local" value={couponForm.expiresAt} onChange={(e) => setCouponForm((p) => ({ ...p, expiresAt: e.target.value }))} />
           </div>
-          <button className="btn btn-primary" type="submit"><Plus size={16} /> Kupon qo'shish</button>
+          <button className="btn btn-primary" type="submit"><Plus size={16} /> {isRu ? "Добавить купон" : "Kupon qo'shish"}</button>
         </form>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
@@ -170,11 +173,11 @@ export default function ProviderPromoPage() {
       </section>
 
       <section style={{ background: "white", borderRadius: 20, padding: "1.25rem", boxShadow: "var(--shadow-xs)" }}>
-        <h2 style={{ fontWeight: 900, marginBottom: "1rem" }}>Quick Reply shablonlar</h2>
+        <h2 style={{ fontWeight: 900, marginBottom: "1rem" }}>{isRu ? "Шаблоны быстрых ответов" : "Quick Reply shablonlar"}</h2>
         <form onSubmit={createQuickReply} style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
           <input className="form-input" placeholder="Qisqa nomi" value={replyForm.title} onChange={(e) => setReplyForm((p) => ({ ...p, title: e.target.value }))} required />
           <textarea className="form-input" placeholder="Xabar matni" style={{ minHeight: 90 }} value={replyForm.message} onChange={(e) => setReplyForm((p) => ({ ...p, message: e.target.value }))} required />
-          <button className="btn btn-primary" type="submit"><Plus size={16} /> Shablon qo'shish</button>
+          <button className="btn btn-primary" type="submit"><Plus size={16} /> {isRu ? "Добавить шаблон" : "Shablon qo'shish"}</button>
         </form>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>

@@ -13,7 +13,30 @@ export async function GET(_req: NextRequest) {
       return apiError("Ruxsat yo'q", 403, "FORBIDDEN");
     }
     const users = db.$client.prepare("SELECT id, name, email, phone, role, created_at, avatar FROM users ORDER BY created_at DESC").all();
-    const shops = db.$client.prepare("SELECT s.*, ci.name as city_name FROM shops s LEFT JOIN cities ci ON s.city_id = ci.id ORDER BY s.created_at DESC").all();
+    const shops = db.$client
+      .prepare(
+        `SELECT
+          s.*,
+          ci.name as city_name,
+          (SELECT COUNT(*) FROM products p WHERE p.shop_id = s.id AND p.is_active = 1) as products_count,
+          (SELECT COUNT(*) FROM orders o WHERE o.shop_id = s.id) as orders_count,
+          (
+            (CASE WHEN COALESCE(s.name, '') <> '' THEN 1 ELSE 0 END) +
+            (CASE WHEN COALESCE(s.logo, '') <> '' THEN 1 ELSE 0 END) +
+            (CASE WHEN COALESCE(s.working_hours, '') <> '' THEN 1 ELSE 0 END) +
+            (CASE WHEN s.location_lat IS NOT NULL AND s.location_lng IS NOT NULL THEN 1 ELSE 0 END) +
+            (CASE WHEN (SELECT COUNT(*) FROM products p2 WHERE p2.shop_id = s.id AND p2.is_active = 1) >= 3 THEN 1 ELSE 0 END) +
+            (CASE WHEN (SELECT COUNT(*) FROM orders o2 WHERE o2.shop_id = s.id) > 0 THEN 1 ELSE 0 END)
+          ) as setup_done_steps
+         FROM shops s
+         LEFT JOIN cities ci ON s.city_id = ci.id
+         ORDER BY s.created_at DESC`
+      )
+      .all()
+      .map((shop: any) => ({
+        ...shop,
+        setup_score: Math.round(((Number(shop.setup_done_steps || 0) / 6) * 100)),
+      }));
     const orders = db.$client.prepare(`
       SELECT o.*, u.name as customer_name, s.name as shop_name
       FROM orders o LEFT JOIN users u ON o.customer_id = u.id LEFT JOIN shops s ON o.shop_id = s.id
